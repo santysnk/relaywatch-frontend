@@ -1,0 +1,122 @@
+/* src/paginas/PaginaAlimentadores/componentes/navegacion/BarraNavegacion.css */
+/*
+   NOTA SOBRE ESTE ARCHIVO (BarraNavegacion.css)
+   - Define el layout visual de la barra superior en modo escritorio y compacto.
+
+   - `.alim-navbar` arma el contenedor principal; los bloques
+     `.alim-nav-bloque-puestos` y `.alim-nav-bloque-controles` distribuyen los
+     botones de puestos y los controles (nuevo, editar, salir).
+
+   - El media query a 900px activa el modo compacto: centra el título,
+     muestra el botón de menú (`.alim-navbar-menu-btn`) y oculta los botones
+     de puestos y controles de la derecha (que pasan al menú lateral).
+*/
+
+/* =========================================================
+   NAVBAR (DESKTOP)
+   ========================================================= */
+.alim-navbar {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   padding: 1rem 1.5rem;
+   background-color: #0f172a;
+   color: #e5e7eb;
+   box-shadow: 0 4px 10px rgba(15, 23, 42, 0.4);
+}
+
+.alim-navbar-left {
+   display: flex;
+   flex-direction: column;
+}
+
+.alim-title {
+   margin: 0;
+   font-size: 1.3rem;
+}
+
+.alim-current-puesto {
+   margin-top: 0.15rem;
+   font-size: 0.9rem;
+   color: #e5e7eb;
+}
+
+/* Contenedor de botones de la nav */
+.alim-nav-buttons {
+   display: flex;
+   align-items: center;
+   gap: 2rem;
+}
+
+/* Bloque 2: botones de puestos */
+.alim-nav-bloque-puestos {
+   display: flex;
+   align-items: center;
+   gap: 2rem;
+}
+
+/* Bloque 1: +, editar, salir */
+.alim-nav-bloque-controles {
+   display: flex;
+   align-items: center;
+   gap: 0.75rem;
+}
+
+/* Boton menu: oculto por defecto (solo se usa en modo compacto) */
+.alim-navbar-menu-btn {
+   display: none;
+   border: none;
+   background: transparent;
+   color: #e5e7eb;
+   font-size: 1.4rem;
+   cursor: pointer;
+}
+
+/* =========================================================
+   NAVBAR (MODO COMPACTO)
+   ========================================================= */
+@media (max-width: 900px) {
+   /* El contenedor principal del nav pasa a modo centrado */
+   .alim-navbar {
+      justify-content: center;
+   }
+
+   .alim-navbar-compact {
+      justify-content: center;
+      position: relative;
+   }
+
+   /* Texto centrado con el nombre del puesto */
+   .alim-navbar-compact-title {
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-align: center;
+      width: 100%;
+   }
+
+   /* Mostramos el boton hamburguesa y lo posicionamos a la izquierda */
+   .alim-navbar-menu-btn {
+      display: block;
+      background: none;
+      border: none;
+      color: #e5e7eb;
+      font-size: 1.3rem;
+      cursor: pointer;
+   }
+
+   .alim-navbar-compact .alim-navbar-menu-btn {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+   }
+
+   /* Ocultamos titulo grande y zona de botones de la derecha */
+   .alim-title {
+      display: none;
+   }
+
+   .alim-nav-buttons {
+      display: none;
+   }
+}

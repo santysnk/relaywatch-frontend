@@ -1,0 +1,718 @@
+/* src/paginas/PaginaAlimentadores/componentes/tarjetas/TarjetaAlimentador.css */
+/*
+   NOTA SOBRE ESTE ARCHIVO (TarjetaAlimentador.css)
+   - Define el aspecto visual de cada tarjeta de alimentador: marco, header con
+     botones, cuerpo con medidores y estados especiales (drag & drop, progreso).
+
+   - `.alim-card` es el contenedor base; `.alim-card-wide` se usa cuando hay
+     muchas cajas para ensanchar la tarjeta.
+
+   - `.alim-card-meter-value` aplica la fuente digital y los colores del display,
+     mientras que `.alim-meter-progress-*` dibuja el borde animado según el
+     periodo de medición configurado.
+*/
+
+/* Tarjeta base (card de alimentador) */
+.alim-card {
+	background-color: #262726; /* fondo gris oscuro */
+	border-radius: 6px;
+	overflow: hidden;
+	box-shadow: 0 10px 25px rgba(15, 23, 42, 0.6);
+	color: #f9fafb;
+	border: 1px solid #64748b;
+	/* sin min-height para que se ajuste al contenido cuando hay zonas ocultas */
+
+	/* Ancho fijo de la tarjeta */
+	width: 304px;
+	min-width: 304px;
+	flex-shrink: 0;
+	box-sizing: border-box;
+}
+
+/* Cuando hay 4 boxes en alguna fila, la hacemos más ancha */
+.alim-card-wide {
+	width: 380px;
+	min-width: 380px;
+}
+
+/* Header de la tarjeta */
+.alim-card-header {
+	padding: 0.2rem 0.3rem;
+	display: flex;
+	align-items: center;
+	position: relative;
+	min-height: 34px; /* asegura que la banda de color se vea */
+}
+
+/* contenedor de los iconos (tuerca + mapeo) */
+.alim-card-icons {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+
+/* Botón base para iconos (tuerca y mapeo) */
+.alim-card-icon-btn,
+.alim-card-config-btn {
+	border: 0px solid #37415171;
+	border-radius: 10px;
+	background: transparent;
+	cursor: pointer;
+	padding: 4px 6px;
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+}
+
+.alim-card-icon-btn:hover,
+.alim-card-config-btn:hover {
+	background-color: rgba(221, 225, 233, 0.6);
+}
+
+/* Iconos (PNG) */
+.alim-card-icon,
+.alim-card-config-icon {
+	width: 20px;
+	height: 20px;
+	display: block;
+}
+
+/* Botón de historial (emoji) */
+.alim-card-historial-btn {
+	font-size: 16px;
+	line-height: 1;
+}
+
+.alim-card-historial-icon {
+	display: block;
+	font-size: 16px;
+}
+
+/* Título centrado dentro del header (respecto al contenedor completo) */
+.alim-card-title {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	font-weight: 700;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: calc(100% - 80px); /* espacio para los botones */
+	pointer-events: none; /* permitir clicks a través del título */
+}
+
+/* ===== BOTÓN EXPANDIR LECTURA COMPLETA ===== */
+.alim-card-expandir-btn {
+	position: absolute;
+	right: 8px;
+	top: 50%;
+	transform: translateY(-50%);
+	border: none;
+	background: transparent;
+	cursor: pointer;
+	padding: 4px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	transition: opacity 0.15s ease, transform 0.15s ease;
+	z-index: 2;
+}
+
+.alim-card-expandir-btn:hover {
+	opacity: 0.7;
+	transform: translateY(-50%) scale(1.15);
+}
+
+.alim-card-expandir-btn:active {
+	transform: translateY(-50%) scale(1);
+}
+
+.alim-card-expandir-icon {
+	font-size: 20px;
+	color: #f1f5f9;
+	display: block;
+	line-height: 1;
+}
+
+/* Botón Play/Stop para polling de lecturas */
+.alim-card-play-btn {
+	border: 1px solid #37415171;
+	border-radius: 10px;
+	background: transparent;
+	cursor: pointer;
+	padding: 4px 8px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 0.9rem;
+	color: #f9fafb;
+	margin-left: auto; /* empuja el botón a la derecha */
+	transition: background-color 0.15s ease, opacity 0.15s ease;
+}
+
+.alim-card-play-btn:hover:not(:disabled) {
+	background-color: rgba(221, 225, 233, 0.6);
+}
+
+.alim-card-play-btn:disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+/* Estado activo (polling en curso) */
+.alim-card-play-btn--active {
+	background-color: rgba(239, 68, 68, 0.3);
+	border-color: #ef4444;
+}
+
+.alim-card-play-btn--active:hover:not(:disabled) {
+	background-color: rgba(239, 68, 68, 0.5);
+}
+
+.alim-card-map-label {
+	font-size: 0.7rem;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+
+/* ===== BARRA DE PROGRESO DE POLLING ===== */
+.alim-card-progress-track {
+	height: 8px;
+	background: transparent;
+	position: relative;
+	overflow: hidden;
+}
+
+.alim-card-progress-fill {
+	height: 100%;
+	width: 100%;
+	background: linear-gradient(to right, #0a3d1a 0%, #22c55e 100%);
+	transform: scaleX(0);
+	transform-origin: left center;
+	animation: alim-progress-fill var(--progress-duration, 60s) linear infinite;
+	position: relative;
+	overflow: hidden;
+	will-change: transform;
+}
+
+/* Chispa que recorre solo el área de progreso */
+.alim-card-progress-spark {
+	position: absolute;
+	top: 0;
+	left: -30px;
+	width: 30px;
+	height: 100%;
+	background: linear-gradient(
+		to right,
+		transparent 0%,
+		rgba(255, 255, 255, 0.7) 50%,
+		transparent 100%
+	);
+	animation: alim-spark 2s ease-in-out infinite;
+}
+
+@keyframes alim-progress-fill {
+	0% {
+		transform: scaleX(0);
+	}
+	100% {
+		transform: scaleX(1);
+	}
+}
+
+@keyframes alim-spark {
+	0% {
+		left: -30px;
+		opacity: 0;
+	}
+	10% {
+		opacity: 1;
+	}
+	90% {
+		opacity: 1;
+	}
+	100% {
+		left: 100%;
+		opacity: 0;
+	}
+}
+
+/* Cuerpo de la tarjeta */
+.alim-card-body {
+	position: relative;
+	padding: 0 1rem 1.2rem; /* sin padding superior, inferior para el triángulo de escala */
+	background-color: #262726; /* mismo que la tarjeta base */
+	border-radius: 0 0 6px 6px;
+}
+
+.alim-card-section {
+	margin-bottom: 0.75rem;
+}
+
+.alim-card-section-title {
+	margin: 0 -1rem 0.4rem -1rem;
+	font-size: 0.8rem;
+	letter-spacing: 0.05em;
+	background: linear-gradient(to right, #47556999, #47556900);
+	padding: 0.25rem 1rem;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.alim-card-meters {
+	display: flex;
+	justify-content: center;       /* centra el grupo de boxes */
+	gap: 10px;
+	position: relative;            /* necesario para posicionar el borde animado */
+	overflow: visible;             /* el borde puede sobresalir un poquito */
+}
+
+/* Cada box con ancho fijo */
+.alim-card-meter {
+	position: relative;
+	flex: 0 0 80px;                /* ancho aproximado de cada box */
+	text-align: center;
+}
+
+.alim-card-meter-phase {
+	display: block;
+	font-size: 1rem;
+	margin-bottom: 0.2rem;
+}
+
+.alim-card-meter-value {
+	position: relative;            /* necesario para dibujar el borde animado con ::before */
+	display: block;
+	font-family: "DS-Digital", "Courier New", monospace;
+	font-size: 1.3rem;
+	letter-spacing: 0.04em;
+	padding: 0.25rem 0.3rem;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: clip;
+	border-radius: 6px;
+	background-color: #020617;     /* fondo negro */
+	border-width: 1px;
+	border-style: solid;           /* necesario para que el borde sea visible */
+	border-color: #0ea5e9;
+	color: #ffff00;
+	box-shadow: inset 0 0 6px rgba(250, 204, 21, 0.4);
+}
+
+/* Estado cuando la tarjeta está siendo arrastrada */
+.alim-card-dragging {
+	opacity: 0.35;
+	transform: scale(0.98);
+	transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+/* ===== BORDE PROGRESO PARA REGISTROS DEL RELÉ ===== */
+.alim-meter-progress-rele::before {
+	content: "";
+	position: absolute;
+	inset: -2px;
+	border-radius: 3px;
+	pointer-events: none;
+
+	background:
+		linear-gradient(#ece4b3e7 0 0) 0% 0 / 0 4px no-repeat,      /* arriba */
+		linear-gradient(#ece4b3e7 0 0) 100% 0 / 4px 0 no-repeat,    /* derecha */
+		linear-gradient(#ece4b3e7 0 0) 100% 100% / 0 4px no-repeat, /* abajo */
+		linear-gradient(#ece4b3e7 0 0) 0% 100% / 4px 0 no-repeat;   /* izquierda */
+
+	animation: rw-border-progress-rele var(--rw-progress-duration-rele, 60s)
+		linear infinite;
+}
+
+@keyframes rw-border-progress-rele {
+	0% {
+		background-size: 0 2px, 2px 0, 0 2px, 2px 0;
+	}
+	25% {
+		background-size: 100% 2px, 2px 0, 0 2px, 2px 0;
+	}
+	50% {
+		background-size: 100% 2px, 2px 100%, 0 2px, 2px 0;
+	}
+	75% {
+		background-size: 100% 2px, 2px 100%, 100% 2px, 2px 0;
+	}
+	100% {
+		background-size: 100% 2px, 2px 100%, 100% 2px, 2px 100%;
+	}
+}
+
+/* ===== BORDE PROGRESO PARA REGISTROS DEL ANALIZADOR ===== */
+.alim-meter-progress-analizador::before {
+	content: "";
+	position: absolute;
+	inset: -2px;
+	border-radius: 3px;
+	pointer-events: none;
+
+	/* Podés usar el mismo color o cambiarlo si querés distinguirlos */
+	background:
+		linear-gradient(#ece4b3e7 0 0) 0% 0 / 0 4px no-repeat,
+		linear-gradient(#ece4b3e7 0 0) 100% 0 / 4px 0 no-repeat,
+		linear-gradient(#ece4b3e7 0 0) 100% 100% / 0 4px no-repeat,
+		linear-gradient(#ece4b3e7 0 0) 0% 100% / 4px 0 no-repeat;
+
+	animation: rw-border-progress-analizador
+		var(--rw-progress-duration-analizador, 60s) linear infinite;
+}
+
+@keyframes rw-border-progress-analizador {
+	0% {
+		background-size: 0 2px, 2px 0, 0 2px, 2px 0;
+	}
+	25% {
+		background-size: 100% 2px, 2px 0, 0 2px, 2px 0;
+	}
+	50% {
+		background-size: 100% 2px, 2px 100%, 0 2px, 2px 0;
+	}
+	75% {
+		background-size: 100% 2px, 2px 100%, 100% 2px, 2px 0;
+	}
+	100% {
+		background-size: 100% 2px, 2px 100%, 100% 2px, 2px 100%;
+	}
+}
+
+/* ===== ESTADO DE ERROR EN LA TARJETA ===== */
+
+/* Borde rojo sutil cuando hay error */
+.alim-card-error {
+	border-color: #dc2626;
+}
+
+/* Overlay semi-transparente sobre el cuerpo de la tarjeta */
+.alim-card-error-overlay {
+	position: absolute;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.75);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 10;
+	border-radius: 0 0 12px 12px;
+}
+
+.alim-card-error-content {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 4px;
+	text-align: center;
+	padding: 1rem;
+}
+
+.alim-card-error-icon {
+	font-size: 2rem;
+	color: #fbbf24;
+	line-height: 1;
+}
+
+.alim-card-error-title {
+	font-size: 0.9rem;
+	font-weight: 700;
+	color: #fbbf24;
+	letter-spacing: 0.1em;
+}
+
+.alim-card-error-message {
+	font-size: 0.8rem;
+	color: #f1f5f9;
+	font-weight: 500;
+}
+
+.alim-card-error-detail {
+	font-size: 0.7rem;
+	color: #94a3b8;
+	font-style: italic;
+}
+
+/* Valor en estado de error */
+.alim-card-meter-value--error {
+	background-color: #450a0a;
+	border-color: #dc2626;
+	color: #ef4444;
+	box-shadow: inset 0 0 6px rgba(239, 68, 68, 0.4);
+}
+
+/* Animación de parpadeo para el overlay de error */
+.alim-card-error-overlay--parpadeo {
+	animation: alim-error-parpadeo 3s ease-in-out infinite;
+}
+
+@keyframes alim-error-parpadeo {
+	0%, 70% {
+		opacity: 1;
+	}
+	85% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+/* ===== TRIÁNGULO DE ESCALA (dentro del body) ===== */
+.alim-card-scale-btn {
+	position: absolute;
+	bottom: 4px;
+	left: 50%;
+	transform: translateX(-50%);
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	background: transparent;
+	border: none;
+	color: #6b7280;
+	cursor: pointer;
+	padding: 2px 8px;
+	border-radius: 4px;
+	font-size: 0.7rem;
+	transition: color 0.15s ease, background-color 0.15s ease;
+	z-index: 5;
+}
+
+.alim-card-scale-btn:hover {
+	color: #9ca3af;
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+.alim-card-scale-btn--active {
+	color: #60a5fa;
+}
+
+.alim-card-scale-btn--active:hover {
+	color: #93c5fd;
+}
+
+.alim-card-scale-triangle {
+	font-size: 0.6rem;
+}
+
+.alim-card-scale-value {
+	font-family: "DS-Digital", "Courier New", monospace;
+	font-size: 0.75rem;
+}
+
+/* ===== POPOVER DE ESCALA ===== */
+.alim-card-scale-popover {
+	position: fixed;
+	z-index: 9999;
+	background-color: #1e293b;
+	border: 1px solid #374151;
+	border-radius: 8px;
+	padding: 12px;
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+	min-width: 120px;
+}
+
+.alim-card-scale-label {
+	display: block;
+	font-size: 0.85rem;
+	color: #9ca3af;
+	margin-bottom: 6px;
+	text-align: center;
+}
+
+.alim-card-scale-controls {
+	display: flex;
+	align-items: stretch;
+	gap: 6px;
+	height: 32px;
+}
+
+.alim-card-scale-pm-btn {
+	width: 32px;
+	height: 32px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: #374151;
+	border: 1px solid #475569;
+	border-radius: 4px;
+	color: #f1f5f9;
+	font-size: 1.2rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background-color 0.15s ease, border-color 0.15s ease;
+	flex-shrink: 0;
+	line-height: 1;
+}
+
+.alim-card-scale-pm-btn:hover:not(:disabled) {
+	background-color: #4b5563;
+	border-color: #60a5fa;
+}
+
+.alim-card-scale-pm-btn:disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+.alim-card-scale-input {
+	width: 60px;
+	height: 32px;
+	padding: 0 4px;
+	background-color: #0f172a;
+	border: 1px solid #475569;
+	border-radius: 4px;
+	color: #f1f5f9;
+	font-size: 1rem;
+	text-align: center;
+	font-family: "DS-Digital", "Courier New", monospace;
+	box-sizing: border-box;
+}
+
+.alim-card-scale-input:focus {
+	outline: none;
+	border-color: #60a5fa;
+}
+
+/* Ocultar flechas del input number */
+.alim-card-scale-input::-webkit-outer-spin-button,
+.alim-card-scale-input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+.alim-card-scale-input[type="number"] {
+	-moz-appearance: textfield;
+	appearance: textfield;
+}
+
+.alim-card-scale-actions {
+	display: flex;
+	justify-content: center;
+	margin-top: 10px;
+}
+
+.alim-card-scale-reset {
+	width: 100%;
+	height: 28px;
+	background: transparent;
+	border: 1px solid #475569;
+	border-radius: 4px;
+	color: #9ca3af;
+	font-size: 0.8rem;
+	cursor: pointer;
+	transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.alim-card-scale-reset:hover {
+	background-color: rgba(255, 255, 255, 0.1);
+	color: #f1f5f9;
+}
+
+/* ===== MENÚ DESPLEGABLE FLOTANTE ===== */
+
+/* Botón toggle con flecha animada */
+.alim-card-menu-toggle {
+	border: none;
+	background: transparent;
+	cursor: pointer;
+	padding: 4px 6px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.alim-card-menu-arrow {
+	display: block;
+	font-size: 12px;
+	color: #f1f5f9;
+	transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	line-height: 1;
+	transform: rotate(180deg); /* Flecha apuntando hacia arriba por defecto */
+}
+
+/* Flecha rotada cuando está abierto (vuelve a apuntar abajo) */
+.alim-card-menu-toggle--abierto .alim-card-menu-arrow {
+	transform: rotate(0deg);
+}
+
+/* Menú flotante (portal) - aparece arriba del header */
+.alim-card-menu-flotante {
+	position: fixed;
+	z-index: 9999;
+	background: linear-gradient(to top, #1e293b, #0f172a);
+	border: 1px solid #374151;
+	border-radius: 6px;
+	box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+	animation: alim-menu-aparecer 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+	overflow: hidden;
+}
+
+@keyframes alim-menu-aparecer {
+	from {
+		opacity: 0;
+		transform: translateY(8px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* Contenido del menú flotante */
+.alim-card-menu-flotante-content {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 12px;
+	padding: 10px 12px;
+}
+
+/* Botones dentro del menú flotante - transparentes sin bordes */
+.alim-card-menu-flotante-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background: transparent;
+	border: none;
+	padding: 0;
+	cursor: pointer;
+	transition: opacity 0.15s ease, transform 0.1s ease;
+}
+
+.alim-card-menu-flotante-btn:hover {
+	opacity: 0.7;
+	transform: scale(1.1);
+}
+
+.alim-card-menu-flotante-btn:active {
+	transform: scale(1);
+}
+
+/* Icono PNG dentro del botón */
+.alim-card-menu-flotante-icon {
+	width: 22px;
+	height: 22px;
+	display: block;
+	filter: brightness(0) invert(1); /* Convertir a blanco */
+}
+
+/* Emoji dentro del botón */
+.alim-card-menu-flotante-emoji {
+	font-size: 20px;
+	width: 22px;
+	height: 22px;
+	display: inline-block;
+	text-align: center;
+	line-height: 22px;
+	vertical-align: middle;
+	position: relative;
+	top: 2px;
+}
+
+/* Icono SVG (tabler-icons) dentro del botón */
+.alim-card-menu-flotante-icon-svg {
+	color: #fff;
+	display: block;
+}
+

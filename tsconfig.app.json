@@ -11,6 +11,9 @@
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
+
+    /* Alias de imports: "@/..." apunta a "src/..." */
+    "paths": { "@/*": ["./src/*"] },
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
