@@ -1,0 +1,184 @@
+/* src/paginas/PaginaRegistradores/componentes/modales/FormularioRegistrador.css */
+
+/* Cada campo: label arriba + input abajo */
+.alim-modal-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: 0.75rem;
+}
+
+.alim-modal-campo label {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.alim-modal-campo input,
+.alim-modal-campo select {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 0.5rem 0.6rem;
+  color: #e2e8f0;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.alim-modal-campo input[type='color'] {
+  padding: 2px;
+  height: 38px;
+  cursor: pointer;
+}
+
+/* Ocultar los botones de incremento/decremento de los inputs numéricos */
+.alim-modal-campo input[type='number']::-webkit-outer-spin-button,
+.alim-modal-campo input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.alim-modal-campo input[type='number'] {
+  -moz-appearance: textfield; /* Firefox */
+  appearance: textfield;
+}
+
+/* Dos campos en una fila */
+.alim-modal-fila {
+  display: flex;
+  gap: 0.6rem;
+}
+.alim-modal-fila .alim-modal-campo {
+  flex: 1;
+}
+
+/* Campo de checkbox: label al lado */
+.alim-modal-campo-check {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+.alim-modal-campo-check input {
+  width: auto;
+}
+.alim-modal-campo-check label {
+  font-size: 0.85rem;
+  color: #e2e8f0;
+}
+
+/* Línea divisoria entre secciones: brillante al centro, transparente en los extremos */
+.form-divisor {
+  height: 2px;
+  border: none;
+  margin: 1.1rem 0;
+  background: linear-gradient(to right, transparent, #64748b, transparent);
+}
+
+/* Test de conexión (demo) */
+.form-test-conexion {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: -0.2rem 0 0.75rem;
+}
+.form-test-btn {
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #e2e8f0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.form-test-btn:hover:not(:disabled) {
+  background: #334155;
+}
+.form-test-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.test-ok {
+  color: #4ade80;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.test-error {
+  color: #f87171;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Fila de "Activo" + botón de mapeo a la derecha (sin sumar una línea nueva) */
+.form-fila-activo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+.form-fila-activo .alim-modal-campo {
+  margin-bottom: 0;
+}
+
+/* Botón para saltar al modal de mapeo */
+.form-btn-mapeo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: 8px;
+  border: 1px solid #38bdf8;
+  background: transparent;
+  color: #38bdf8;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.form-btn-mapeo:hover {
+  background: rgba(56, 189, 248, 0.12);
+}
+
+/* Mensaje de error */
+.alim-modal-error {
+  color: #fca5a5;
+  font-size: 0.85rem;
+  margin: 0.5rem 0 0;
+}
+
+/* Acciones (Cancelar / Crear) */
+.alim-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 1.5rem;
+}
+
+.alim-modal-btn {
+  padding: 0.55rem 1.1rem;
+  border-radius: 8px;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.alim-modal-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.alim-modal-btn-cancelar {
+  background-color: #334155;
+  color: #e2e8f0;
+}
+.alim-modal-btn-cancelar:hover {
+  background-color: #475569;
+}
+
+.alim-modal-btn-guardar {
+  background-color: #0ea5e9;
+  color: #ffffff;
+  box-shadow: 0 10px 22px rgba(14, 165, 233, 0.1);
+}
+.alim-modal-btn-guardar:hover {
+  background-color: #0284c7;
+}

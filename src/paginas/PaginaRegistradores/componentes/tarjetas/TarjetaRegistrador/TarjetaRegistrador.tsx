@@ -117,8 +117,12 @@ export function TarjetaRegistrador({
       )}
 
       <div className="alim-card-body">
-        <Panel titulo={registrador.tituloPanelSuperior.nombre} configs={configsSuperior} valores={valores} />
-        <Panel titulo={registrador.tituloPanelInferior.nombre} configs={configsInferior} valores={valores} />
+        {registrador.panelSuperior && (
+          <Panel titulo={registrador.tituloPanelSuperior.nombre} configs={configsSuperior} valores={valores} />
+        )}
+        {registrador.panelInferior && (
+          <Panel titulo={registrador.tituloPanelInferior.nombre} configs={configsInferior} valores={valores} />
+        )}
       </div>
     </div>
   );

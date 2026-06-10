@@ -1,0 +1,220 @@
+/* src/paginas/PaginaRegistradores/componentes/modales/catalogos/Catalogos.css */
+
+/* Nota: los estilos de campos y botones (.alim-modal-campo, .alim-modal-btn-*,
+   .alim-modal-error) se reutilizan de FormularioRegistrador.css, que ya está
+   cargado en esta página. Acá solo agregamos lo propio de los catálogos. */
+
+/* --- Pestañas --- */
+.cat-tabs {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #334155;
+}
+
+.cat-tab {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  padding: 0.5rem 0.8rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px; /* para que el borde activo pise el borde del contenedor */
+}
+.cat-tab:hover {
+  color: #e2e8f0;
+}
+.cat-tab-activa {
+  color: #38bdf8;
+  border-bottom-color: #38bdf8;
+}
+
+/* Anima el alto del contenido al cambiar de tab (el height lo controla el JS
+   midiendo el contenido real; acá solo definimos la transición y el recorte). */
+.cat-contenido-animado {
+  overflow: hidden;
+  transition: height 0.28s ease;
+}
+
+/* --- Acciones del formulario (alta/edición) --- */
+.cat-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+
+/* El botón Eliminar va separado a la izquierda */
+.cat-btn-eliminar {
+  margin-right: auto;
+  background-color: #7f1d1d;
+  color: #fecaca;
+}
+.cat-btn-eliminar:hover {
+  background-color: #991b1b;
+}
+
+/* --- Input con botón X para limpiar --- */
+.cat-input-wrap {
+  position: relative;
+}
+.cat-input-wrap input {
+  padding-right: 2rem; /* deja lugar para la X, que no pise el texto */
+}
+.cat-input-x {
+  position: absolute;
+  top: 50%;
+  right: 0.5rem;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+.cat-input-x:hover {
+  color: #e2e8f0;
+}
+
+/* Texto de ayuda bajo un campo (ej. formato esperado) */
+.cat-hint {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.72rem;
+  color: #64748b;
+}
+
+/* --- Relación: dos campos (entrada / salida) --- */
+.cat-relacion-fila {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+.cat-relacion-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+.cat-relacion-label {
+  font-size: 0.72rem;
+  color: #94a3b8;
+}
+.cat-relacion-sep {
+  font-size: 1.3rem;
+  color: #94a3b8;
+  padding-bottom: 0.45rem; /* alinear la "/" con los inputs */
+}
+.cat-relacion-x {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 0.2rem 0.5rem;
+}
+.cat-relacion-x:hover {
+  color: #e2e8f0;
+}
+
+/* --- Tabla con scroll --- */
+.cat-tabla-scroll {
+  max-height: 240px; /* a partir de acá aparece la barra a la derecha */
+  overflow-y: auto;
+  border: 1px solid #334155;
+  border-radius: 8px;
+}
+
+.cat-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+/* Columna de numeración (#): angosta y centrada */
+.cat-col-num {
+  width: 2.5rem;
+  text-align: center;
+  color: #94a3b8;
+}
+
+/* Encabezado fijo: queda pegado arriba mientras scrolleás */
+.cat-tabla thead th {
+  position: sticky;
+  top: 0;
+  background: #1e293b;
+  color: #94a3b8;
+  text-align: left;
+  font-weight: 600;
+  padding: 0.5rem 0.7rem;
+  border-bottom: 1px solid #334155;
+  z-index: 1;
+}
+
+.cat-tabla tbody td {
+  padding: 0.5rem 0.7rem;
+  color: #e2e8f0;
+  border-bottom: 1px solid #2c3e5a;
+}
+
+/* Filas más claras que el fondo del modal (#28374e) para que se distingan */
+.cat-tabla tbody tr {
+  background: #35496b;
+  cursor: pointer;
+}
+.cat-tabla tbody tr:hover {
+  background: #415a82;
+}
+
+/* Fila seleccionada (la que se está editando) */
+.cat-fila-sel,
+.cat-tabla tbody tr.cat-fila-sel:hover {
+  background: #1c6091;
+}
+.cat-fila-sel td {
+  color: #ffffff;
+}
+
+/* Fila protegida ("Sin determinar"): apagada, sin pointer ni hover */
+.cat-tabla tbody tr.cat-fila-protegida,
+.cat-tabla tbody tr.cat-fila-protegida:hover {
+  background: #2d3e59;
+  cursor: default;
+}
+.cat-fila-protegida td {
+  color: #94a3b8;
+}
+.cat-no-editable {
+  margin-left: 0.45rem;
+  font-size: 0.78rem;
+  font-style: italic;
+  color: #64748b;
+}
+
+/* Barra de scroll acorde al tema oscuro */
+.cat-tabla-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+.cat-tabla-scroll::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+.cat-tabla-scroll::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 6px;
+}
+.cat-tabla-scroll::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* --- Mensaje de lista vacía / cargando / próximamente --- */
+.cat-vacio {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 1rem 0;
+}

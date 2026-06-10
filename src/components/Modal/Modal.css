@@ -1,0 +1,51 @@
+/* src/components/Modal/Modal.css */
+
+/* Overlay: fondo oscuro a pantalla completa que centra el modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+/* Caja del modal (estilo del proyecto avanzado) */
+.alim-modal {
+  position: relative;
+  border-radius: 18px;
+  padding: 1rem 1.3rem;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.35);
+  max-width: 503px;
+  width: 100%;
+  box-sizing: border-box;
+  background: #28374e;
+  color: #e2e8f0;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.alim-modal h2 {
+  margin: 0 0 0.9rem 0;
+  padding-bottom: 0.6rem;
+  border-bottom: 2px solid #64748b;
+}
+
+/* Botón de cerrar (la X de la esquina) */
+.modal-cerrar {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  background: transparent;
+  border: none;
+  color: #e2e8f0;
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.7;
+}
+.modal-cerrar:hover {
+  opacity: 1;
+}

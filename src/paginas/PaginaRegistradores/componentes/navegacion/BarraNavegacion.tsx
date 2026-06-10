@@ -6,6 +6,7 @@ interface BarraNavegacionProps {
   midiendo: boolean; // estado global de medición
   onToggleMediciones: () => void;
   onNuevoRegistrador: () => void;
+  onCatalogos: () => void; // abre el modal de catálogos (solo admin)
   onSalir: () => void;
 }
 
@@ -16,6 +17,7 @@ export function BarraNavegacion({
   midiendo,
   onToggleMediciones,
   onNuevoRegistrador,
+  onCatalogos,
   onSalir,
 }: BarraNavegacionProps) {
   return (
@@ -42,6 +44,25 @@ export function BarraNavegacion({
           >
             {midiendo ? 'Detener mediciones' : 'Iniciar mediciones'}
           </button>
+
+          {esAdmin && (
+            <button
+              type="button"
+              onClick={onCatalogos}
+              title="Administrar catálogos (títulos, relaciones, parámetros)"
+              style={{
+                padding: '8px 16px',
+                borderRadius: '8px',
+                border: 'none',
+                cursor: 'pointer',
+                fontWeight: 600,
+                color: 'white',
+                backgroundColor: '#475569',
+              }}
+            >
+              Catálogos
+            </button>
+          )}
 
           {esAdmin && (
             <button

@@ -1,42 +1,45 @@
 // src/paginas/PaginaRegistradores/componentes/layout/VistaRegistradores.tsx
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { usarContextoRegistradores } from '../../contexto/ContextoRegistradores';
 import { BarraNavegacion } from '../navegacion/BarraNavegacion';
 import { GrillaTarjetas } from '../tarjetas/GrillaTarjetas';
+import { Modal } from '@/components/Modal/Modal';
+import { FormularioRegistrador } from '../modales/FormularioRegistrador';
+import { ModalCatalogos } from '../modales/catalogos/ModalCatalogos';
+import { ModalMapeo } from '../modales/mapeo/ModalMapeo';
 import type { Registrador } from '@/tipos/registrador';
 import './VistaRegistradores.css';
 
 // Layout principal del dashboard.
 export function VistaRegistradores() {
-  const navigate = useNavigate();
+  
   const { usuario, logout } = useAuth();
-  const { registradores, cargando, error } = usarContextoRegistradores();
+  const { registradores, cargando, error, recargar } = usarContextoRegistradores();
 
   const esAdmin = usuario?.rol === 'admin';
 
   // Estado GLOBAL de medición: un solo botón arranca/detiene todas las tarjetas.
   const [midiendo, setMidiendo] = useState(false);
+  const [modalAbierto, setModalAbierto] = useState(false);
+  const [catalogosAbierto, setCatalogosAbierto] = useState(false);
+  const [mapeoRegistrador, setMapeoRegistrador] = useState<Registrador | null>(null);
+  const [registradorEditar, setRegistradorEditar] = useState<Registrador | null>(null);
 
   function handleSalir() {
     logout();
-    navigate('/login');
   }
 
   function handleNuevoRegistrador() {
-    // TODO (paso 4.6): abrir el modal de creación de registrador
-    alert('Crear registrador — lo conectamos en el paso 4.6');
+    setModalAbierto(true);
   }
 
   function handleConfig(registrador: Registrador) {
-    // TODO (paso 4.6): abrir el modal de configuración del registrador
-    alert(`Configurar "${registrador.nombre}" — lo conectamos en el paso 4.6`);
+    setRegistradorEditar(registrador);
   }
 
   function handleMapeo(registrador: Registrador) {
-    // TODO (paso 4.6): abrir el modal de mapeo de mediciones
-    alert(`Mapeo de "${registrador.nombre}" — lo conectamos en el paso 4.6`);
+    setMapeoRegistrador(registrador);
   }
 
   return (
@@ -46,6 +49,7 @@ export function VistaRegistradores() {
         midiendo={midiendo}
         onToggleMediciones={() => setMidiendo((m) => !m)}
         onNuevoRegistrador={handleNuevoRegistrador}
+        onCatalogos={() => setCatalogosAbierto(true)}
         onSalir={handleSalir}
       />
 
@@ -70,6 +74,59 @@ export function VistaRegistradores() {
           />
         )}
       </main>
+
+      <Modal
+        abierto={modalAbierto}
+        onCerrar={() => setModalAbierto(false)}
+        titulo="Nuevo registrador"
+      >
+        <FormularioRegistrador
+          onGuardado={() => {
+            setModalAbierto(false);
+            recargar();
+          }}
+          onCancelar={() => setModalAbierto(false)}
+        />
+      </Modal>
+
+      <Modal
+        abierto={registradorEditar !== null}
+        onCerrar={() => setRegistradorEditar(null)}
+        titulo="Editar registrador"
+      >
+        {registradorEditar && (
+          <FormularioRegistrador
+            registrador={registradorEditar}
+            onGuardado={() => {
+              setRegistradorEditar(null);
+              recargar();
+            }}
+            onCancelar={() => setRegistradorEditar(null)}
+            onIrAMapeo={() => {
+              setMapeoRegistrador(registradorEditar);
+              setRegistradorEditar(null);
+            }}
+          />
+        )}
+      </Modal>
+
+      <ModalCatalogos
+        abierto={catalogosAbierto}
+        onCerrar={() => setCatalogosAbierto(false)}
+      />
+
+      <ModalMapeo
+        registrador={mapeoRegistrador}
+        onCerrar={() => setMapeoRegistrador(null)}
+        onGuardado={() => {
+          setMapeoRegistrador(null);
+          recargar();
+        }}
+        onIrAConfig={() => {
+          setRegistradorEditar(mapeoRegistrador);
+          setMapeoRegistrador(null);
+        }}
+      />
     </div>
   );
 }
