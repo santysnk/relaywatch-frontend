@@ -2,7 +2,7 @@
 
 Cliente web para el monitoreo de **registradores eléctricos** (relés de protección y analizadores de red): un panel con tarjetas por equipo que muestran sus mediciones en vivo, y la administración completa de equipos y catálogos.
 
-Trabajo Práctico final del curso Full Stack — desarrollado por **Santiago** y **Vanina**.
+Trabajo Práctico final del curso Full Stack — desarrollado por **Santiago Casal** y **Vanina Labrunee**.
 
 > ⚙️ La API está en su propio repositorio: [relaywatch-backend](https://github.com/santysnk/relaywatch-backend) — **hay que levantarla primero** para que la app funcione.
 
