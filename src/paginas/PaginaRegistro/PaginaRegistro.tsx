@@ -13,6 +13,13 @@ type Campo = 'nombre' | 'apellido' | 'email' | 'contrasena' | 'confirmar';
 // Objeto de errores: cada campo puede tener (o no) un mensaje
 type Errores = Partial<Record<Campo, string>>;
 
+// Alerta flotante (éxito o error), igual que en el login
+type TipoAlerta = 'error' | 'exito';
+interface Alerta {
+  mensaje: string;
+  tipo: TipoAlerta;
+}
+
 export function PaginaRegistro() {
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
@@ -21,8 +28,15 @@ export function PaginaRegistro() {
   const [confirmar, setConfirmar] = useState('');
   const [errores, setErrores] = useState<Errores>({});
   const [enviando, setEnviando] = useState(false);
+  const [alerta, setAlerta] = useState<Alerta>({ mensaje: '', tipo: 'error' });
 
   const navigate = useNavigate();
+
+  // Muestra una alerta flotante temporal (se borra sola a los 4s)
+  function mostrarAlerta(mensaje: string, tipo: TipoAlerta = 'error') {
+    setAlerta({ mensaje, tipo });
+    setTimeout(() => setAlerta({ mensaje: '', tipo: 'error' }), 4000);
+  }
 
   // Valida un campo, actualiza el estado de errores y devuelve el mensaje
   function validarCampo(campo: Campo): string {
@@ -86,14 +100,14 @@ export function PaginaRegistro() {
         password: contrasena,
       });
 
-      alert('¡Cuenta creada con éxito! Ahora podés iniciar sesión.');
-      navigate('/login');
+      mostrarAlerta('¡Cuenta creada! Redirigiendo al login…', 'exito');
+      setTimeout(() => navigate('/login'), 1400);
     } catch (error: any) {
       if (error?.response?.status === 409) {
         // Email duplicado → marcamos el campo email
         setErrores((prev) => ({ ...prev, email: 'Ese email ya está registrado.' }));
       } else {
-        alert('No se pudo crear la cuenta. Intentá de nuevo.');
+        mostrarAlerta('No se pudo crear la cuenta. Intentá de nuevo.', 'error');
       }
     } finally {
       setEnviando(false);
@@ -189,6 +203,10 @@ export function PaginaRegistro() {
           </div>
         </div>
       </div>
+
+      {alerta.mensaje && (
+        <div className={`alerta alerta-${alerta.tipo}`}>{alerta.mensaje}</div>
+      )}
     </form>
   );
 }
