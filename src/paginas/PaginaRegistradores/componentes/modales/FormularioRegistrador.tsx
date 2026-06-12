@@ -2,6 +2,8 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { api } from '@/api/axios';
+import { ModalConfirmacion } from '@/components/ModalConfirmacion/ModalConfirmacion';
+import { ModalRestaurarRegistrador } from './ModalRestaurarRegistrador';
 import type { Registrador } from '@/tipos/registrador';
 import './FormularioRegistrador.css';
 
@@ -43,6 +45,8 @@ export function FormularioRegistrador({
   const [error, setError] = useState<string | null>(null);
   const [guardando, setGuardando] = useState(false);
   const [testEstado, setTestEstado] = useState<'idle' | 'probando' | 'ok' | 'error'>('idle');
+  const [confirmarAbierto, setConfirmarAbierto] = useState(false);
+  const [restaurarAbierto, setRestaurarAbierto] = useState(false);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -78,6 +82,21 @@ export function FormularioRegistrador({
     }
   }
 
+  // Elimina el registrador (solo en edición). El backend borra en cascada
+  // sus configs y lecturas. La confirmación la maneja ModalConfirmacion.
+  async function confirmarEliminar() {
+    if (!registrador) return;
+    setConfirmarAbierto(false);
+    setError(null);
+    try {
+      await api.delete(`/registradores/${registrador.id}`);
+      onGuardado(); // cierra el modal + recarga la lista
+    } catch (err: any) {
+      if (err?.response?.status === 403) setError('No tenés permiso (solo admin).');
+      else setError('No se pudo eliminar el registrador.');
+    }
+  }
+
   // Test de conexión (demo): simulamos el intento de conectar al equipo.
   // Regla: puerto 502 (Modbus TCP estándar) => OK; cualquier otro => error.
   function probarConexion() {
@@ -88,6 +107,7 @@ export function FormularioRegistrador({
   }
 
   return (
+    <>
     <form onSubmit={handleSubmit}>
       {/* ─── Sección 1: Identificación ─── */}
       <div className="alim-modal-fila">
@@ -221,6 +241,24 @@ export function FormularioRegistrador({
       {error && <p className="alim-modal-error">{error}</p>}
 
       <div className="alim-modal-actions">
+        {esEdicion && (
+          <button
+            type="button"
+            className="alim-modal-btn form-btn-eliminar"
+            onClick={() => setConfirmarAbierto(true)}
+          >
+            Eliminar
+          </button>
+        )}
+        {!esEdicion && (
+          <button
+            type="button"
+            className="alim-modal-btn form-btn-restaurar"
+            onClick={() => setRestaurarAbierto(true)}
+          >
+            Restaurar…
+          </button>
+        )}
         <button
           type="button"
           className="alim-modal-btn alim-modal-btn-cancelar"
@@ -237,5 +275,26 @@ export function FormularioRegistrador({
         </button>
       </div>
     </form>
+
+    <ModalConfirmacion
+      abierto={confirmarAbierto}
+      titulo="Eliminar registrador"
+      mensaje={`¿Eliminar el registrador "${registrador?.nombre ?? ''}"? Dejará de verse en el panel, pero sus lecturas históricas se conservan en la base de datos.`}
+      textoConfirmar="Eliminar"
+      textoCancelar="Cancelar"
+      peligroso
+      onConfirmar={confirmarEliminar}
+      onCancelar={() => setConfirmarAbierto(false)}
+    />
+
+    <ModalRestaurarRegistrador
+      abierto={restaurarAbierto}
+      onCerrar={() => setRestaurarAbierto(false)}
+      onRestaurado={() => {
+        setRestaurarAbierto(false);
+        onGuardado(); // cierra el modal de alta + recarga la grilla
+      }}
+    />
+    </>
   );
 }

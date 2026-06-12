@@ -12,4 +12,14 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  server: {
+    watch: {
+      // El proyecto vive dentro de OneDrive: el watcher normal de Vite se
+      // pierde cambios de archivos ahí y el HMR queda sirviendo código viejo
+      // (mezclas imposibles de UI). El polling revisa los archivos cada tanto
+      // y detecta los cambios siempre.
+      usePolling: true,
+      interval: 300,
+    },
+  },
 })

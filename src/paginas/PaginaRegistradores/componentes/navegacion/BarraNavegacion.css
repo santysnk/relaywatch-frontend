@@ -27,12 +27,22 @@
 
 .alim-navbar-left {
    display: flex;
-   flex-direction: column;
+   flex-direction: row;
+   align-items: center;
+   gap: 1.5rem; /* aire entre el título y el botón de mediciones */
 }
 
 .alim-title {
    margin: 0;
    font-size: 1.3rem;
+   letter-spacing: 0.02em;
+   /* La "firma" del proyecto: banda degradé que se desvanece a la derecha
+      (igual que los títulos de panel de las cards y los labels de los modales),
+      con un acento celeste a la izquierda (el color de pestañas/acciones). */
+   background: linear-gradient(to right, #33415e, transparent 85%);
+   border-left: 3px solid #38bdf8;
+   border-radius: 8px;
+   padding: 0.3rem 1.4rem 0.3rem 0.8rem;
 }
 
 .alim-current-puesto {
@@ -60,6 +70,175 @@
    display: flex;
    align-items: center;
    gap: 0.75rem;
+}
+
+/* =========================================================
+   BOTONES DEL NAVBAR
+   ========================================================= */
+
+/* Iniciar/Detener mediciones (junto al título).
+   Estilo "ghost": borde + texto de color sobre fondo translúcido, como los
+   botones Restaurar y ← Configuración de los modales. */
+.alim-btn-mediciones {
+   position: relative; /* ancla del spark que viaja adentro */
+   overflow: hidden; /* el spark no se asoma fuera del botón */
+   display: inline-flex;
+   align-items: center;
+   gap: 0.5rem;
+   border: 1px solid #4ade80;
+   border-radius: 10px;
+   padding: 0.45rem 1.2rem;
+   font-size: 0.9rem;
+   font-weight: 600;
+   cursor: pointer;
+   background-color: rgba(74, 222, 128, 0.08);
+   color: #4ade80;
+   transition: background-color 0.15s ease, transform 0.1s ease,
+      box-shadow 0.1s ease;
+}
+/* Hover sin "elevación": solo intensifica apenas el fondo */
+.alim-btn-mediciones:hover {
+   background-color: rgba(74, 222, 128, 0.18);
+}
+
+/* Sin el anillo de foco del navegador al clickear (tapaba el borde de color) */
+.alim-btn-mediciones:focus,
+.alim-btn-mediciones:focus-visible {
+   outline: none;
+}
+
+/* Contenido del botón (ícono + texto). Existe para poder recrearlo con key
+   en cada cambio de estado (ver comentario en el componente). */
+.alim-btn-mediciones-contenido {
+   display: inline-flex;
+   align-items: center;
+   gap: 0.5rem;
+}
+
+/* Estado "midiendo": rojo suave con puntito REC pulsante */
+.alim-btn-mediciones-on {
+   border-color: #f87171;
+   background-color: rgba(248, 113, 113, 0.08);
+   color: #f87171;
+}
+.alim-btn-mediciones-on:hover {
+   background-color: rgba(248, 113, 113, 0.18);
+}
+
+/* Triangulito de "play" (un poco más chico que el texto) */
+.alim-ico-play {
+   font-size: 0.7rem;
+}
+
+/* Mientras el spark viaja: cursor de espera (el clic se ignora en el JS) */
+.alim-btn-mediciones-animando {
+   cursor: progress;
+}
+
+/* =========================================================
+   SPARK DEL BOTÓN DE MEDICIONES
+   Un destello que cruza el botón al hacer clic. Arranca suave y
+   acelera (ease-in). Cambia de color a mitad de camino. Cuando
+   llega, recién ahí se prenden/apagan las mediciones (lo maneja
+   el setTimeout del componente con la MISMA duración: 1.1s).
+   ========================================================= */
+/* Barra vertical | con glow (no una bola) que cruza el botón,
+   de borde a borde (el overflow:hidden del botón la recorta prolijo
+   en las esquinas redondeadas) */
+.alim-spark-viaje {
+   position: absolute;
+   top: 0;
+   bottom: 0;
+   width: 3px;
+   height: 100%;
+   border-radius: 0;
+   transform: translateX(-50%);
+   pointer-events: none;
+}
+
+/* INICIAR: viaja de izquierda a derecha, rojo → (se decolora) → verde */
+.alim-spark-iniciar {
+   animation: alim-spark-viaje-iniciar 1.1s cubic-bezier(0.55, 0, 1, 0.45) forwards;
+}
+@keyframes alim-spark-viaje-iniciar {
+   0% {
+      left: 0%;
+      background-color: #f87171;
+      box-shadow: 0 0 10px 2px rgba(248, 113, 113, 0.8);
+   }
+   50% {
+      background-color: #e2e8f0;
+      box-shadow: 0 0 10px 2px rgba(226, 232, 240, 0.7);
+   }
+   100% {
+      left: 100%;
+      background-color: #4ade80;
+      box-shadow: 0 0 10px 2px rgba(74, 222, 128, 0.8);
+   }
+}
+
+/* DETENER: el regreso — de derecha a izquierda, verde → (se decolora) → rojo */
+.alim-spark-detener {
+   animation: alim-spark-viaje-detener 1.1s cubic-bezier(0.55, 0, 1, 0.45) forwards;
+}
+@keyframes alim-spark-viaje-detener {
+   0% {
+      left: 100%;
+      background-color: #4ade80;
+      box-shadow: 0 0 10px 2px rgba(74, 222, 128, 0.8);
+   }
+   50% {
+      background-color: #e2e8f0;
+      box-shadow: 0 0 10px 2px rgba(226, 232, 240, 0.7);
+   }
+   100% {
+      left: 0%;
+      background-color: #f87171;
+      box-shadow: 0 0 10px 2px rgba(248, 113, 113, 0.8);
+   }
+}
+
+/* Puntito rojo pulsante estilo "REC" */
+.alim-dot-rec {
+   width: 9px;
+   height: 9px;
+   border-radius: 50%;
+   background-color: #f87171;
+   animation: alim-rec-pulse 1.2s ease-in-out infinite;
+}
+@keyframes alim-rec-pulse {
+   0%,
+   100% {
+      opacity: 1;
+      box-shadow: 0 0 0 0 rgba(248, 113, 113, 0.6);
+   }
+   50% {
+      opacity: 0.55;
+      box-shadow: 0 0 0 5px rgba(248, 113, 113, 0);
+   }
+}
+
+/* Botón Catálogos (gris pizarra, mismo formato que Salir) */
+.alim-btn-catalogos {
+   border: none;
+   border-radius: 10px;
+   padding: 0.45rem 1.2rem;
+   font-size: 0.9rem;
+   font-weight: 600;
+   cursor: pointer;
+   background-color: #475569;
+   color: #e2e8f0;
+   transition: background-color 0.15s ease, transform 0.1s ease,
+      box-shadow 0.1s ease;
+}
+.alim-btn-catalogos:hover {
+   background-color: #5b6b85;
+   box-shadow: 0 4px 10px rgba(71, 85, 105, 0.4);
+   transform: translateY(-1px);
+}
+.alim-btn-catalogos:active {
+   transform: translateY(0);
+   box-shadow: none;
 }
 
 /* Boton menu: oculto por defecto (solo se usa en modo compacto) */

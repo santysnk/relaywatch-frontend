@@ -1,0 +1,105 @@
+/* src/paginas/PaginaRegistradores/componentes/navegacion/SelectorColorFondo.css */
+
+.scf {
+  position: relative; /* ancla del menú desplegable */
+}
+
+/* Botón 🎨 del navbar */
+.scf-boton {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid #475569;
+  border-radius: 10px;
+  background: transparent;
+  font-size: 1.15rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.scf-boton:hover {
+  background: rgba(148, 163, 184, 0.15);
+}
+
+/* Capa invisible a pantalla completa: clic afuera = cerrar */
+.scf-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+}
+
+/* Menú desplegable con la paleta */
+.scf-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 100;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 0.7rem 0.8rem;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+  animation: scf-aparecer 0.15s ease-out;
+}
+
+@keyframes scf-aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.scf-titulo {
+  display: block;
+  font-size: 0.72rem;
+  color: #94a3b8;
+  margin-bottom: 0.5rem;
+  white-space: nowrap;
+}
+
+/* Grilla de swatches: 3 columnas */
+.scf-grilla {
+  display: grid;
+  grid-template-columns: repeat(3, 28px);
+  gap: 0.5rem;
+  justify-items: center;
+}
+
+/* Cada circulito de color */
+.scf-swatch {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.1s ease;
+}
+.scf-swatch:hover {
+  transform: scale(1.15);
+}
+
+/* El color actualmente aplicado: anillo celeste */
+.scf-swatch-activo {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.35);
+}
+
+/* Swatch "personalizado": arcoíris que esconde el input nativo */
+.scf-swatch-custom {
+  background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red);
+  display: block;
+  overflow: hidden;
+}
+.scf-swatch-custom input {
+  opacity: 0; /* el input nativo está pero no se ve: el clic lo abre igual */
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}

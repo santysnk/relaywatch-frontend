@@ -263,6 +263,7 @@
 
 .alim-card-meters {
 	display: flex;
+	flex-wrap: wrap;               /* si hubiera más boxes de los que entran, bajan de fila en vez de romper la card */
 	justify-content: center;       /* centra el grupo de boxes */
 	gap: 10px;
 	position: relative;            /* necesario para posicionar el borde animado */

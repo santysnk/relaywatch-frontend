@@ -43,6 +43,7 @@ export interface Registrador {
   panelInferior: boolean;
   idTituloPanelInferior: number;
   activo: boolean;
+  deletedAt: string | null; // soft delete: null = vivo, con fecha = eliminado
   configsRegistrador: ConfigRegistrador[];
   tituloPanelSuperior: TituloPanel;
   tituloPanelInferior: TituloPanel;

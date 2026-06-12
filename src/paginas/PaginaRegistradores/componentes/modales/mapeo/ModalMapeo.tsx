@@ -16,6 +16,10 @@ type Panel = 'superior' | 'inferior';
 // El título id=1 ("Sin determinar") es el default: va primero y en cursiva.
 const ID_TITULO_DEFAULT = 1;
 
+// Máximo de parámetros por panel: 3 entran en una fila de la card sin
+// deformarla. El backend valida lo mismo (no confiamos solo en el front).
+const MAX_POR_PANEL = 3;
+
 // Borrador local de un parámetro mapeado. No guardamos 'orden': el orden es la
 // posición dentro de su array (superior/inferior) y lo calculamos al guardar.
 interface ConfigBorrador {
@@ -96,6 +100,9 @@ export function ModalMapeo({ registrador, onCerrar, onGuardado, onIrAConfig }: M
   const setterDe = (panel: Panel) => (panel === 'superior' ? setSuperior : setInferior);
 
   function agregar(panel: Panel, idParametro: number) {
+    // No pasar del tope (el select ya se deshabilita, esto es cinturón extra)
+    const lista = panel === 'superior' ? superior : inferior;
+    if (lista.length >= MAX_POR_PANEL) return;
     const p = parametros.find((x) => x.id === idParametro);
     if (!p) return;
     const nuevo: ConfigBorrador = {
@@ -195,14 +202,14 @@ export function ModalMapeo({ registrador, onCerrar, onGuardado, onIrAConfig }: M
             className={`mapeo-tab ${esSuper ? 'mapeo-tab-activa' : ''}`}
             onClick={() => setPanelActivo('superior')}
           >
-            Panel superior ({superior.length})
+            Panel superior ({superior.length}/{MAX_POR_PANEL})
           </button>
           <button
             type="button"
             className={`mapeo-tab ${!esSuper ? 'mapeo-tab-activa' : ''}`}
             onClick={() => setPanelActivo('inferior')}
           >
-            Panel inferior ({inferior.length})
+            Panel inferior ({inferior.length}/{MAX_POR_PANEL})
           </button>
         </div>
         <label className="mapeo-mostrar">
@@ -217,6 +224,7 @@ export function ModalMapeo({ registrador, onCerrar, onGuardado, onIrAConfig }: M
 
       <SeccionPanel
         items={itemsActivo}
+        lleno={itemsActivo.length >= MAX_POR_PANEL}
         disponibles={disponibles}
         relaciones={relaciones}
         tituloId={tituloActivo}
@@ -258,6 +266,7 @@ export function ModalMapeo({ registrador, onCerrar, onGuardado, onIrAConfig }: M
 
 interface SeccionPanelProps {
   items: ConfigBorrador[];
+  lleno: boolean; // el panel llegó al máximo de parámetros
   disponibles: Parametro[];
   relaciones: RelacionTransformacion[];
   tituloId: number;
@@ -271,6 +280,7 @@ interface SeccionPanelProps {
 
 function SeccionPanel({
   items,
+  lleno,
   disponibles,
   relaciones,
   tituloId,
@@ -302,13 +312,13 @@ function SeccionPanel({
         <select
           className="mapeo-add-select"
           value=""
-          disabled={disponibles.length === 0}
+          disabled={lleno || disponibles.length === 0}
           onChange={(e) => {
             const id = Number(e.target.value);
             if (id) onAgregar(id);
           }}
         >
-          <option value="">+ Agregar parámetro…</option>
+          <option value="">{lleno ? 'Panel completo' : '+ Agregar parámetro…'}</option>
           {disponibles.map((p) => (
             <option key={p.id} value={p.id}>
               {p.nombre} ({p.unidad}) · Modbus {p.indiceParametro}

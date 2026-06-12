@@ -10,8 +10,12 @@
 
 .alim-modal-campo label {
   font-size: 0.75rem;
-  color: #94a3b8;
+  color: #cbd5e1;
   font-weight: 500;
+  /* Mismo efecto que los títulos de panel en la card: banda que se desvanece */
+  background: linear-gradient(to right, #566a93, transparent 80%);
+  padding: 0.22rem 0.5rem;
+  border-radius: 5px;
 }
 
 .alim-modal-campo input,
@@ -64,6 +68,9 @@
 .alim-modal-campo-check label {
   font-size: 0.85rem;
   color: #e2e8f0;
+  /* sin la banda degradé: este label va inline al lado del checkbox */
+  background: none;
+  padding: 0;
 }
 
 /* Línea divisoria entre secciones: brillante al centro, transparente en los extremos */
@@ -118,6 +125,27 @@
 }
 .form-fila-activo .alim-modal-campo {
   margin-bottom: 0;
+}
+
+/* Botón Eliminar: a la izquierda de la fila de acciones, en rojo */
+.form-btn-eliminar {
+  margin-right: auto; /* empuja Cancelar/Guardar a la derecha */
+  background-color: #7f1d1d;
+  color: #fecaca;
+}
+.form-btn-eliminar:hover {
+  background-color: #991b1b;
+}
+
+/* Botón Restaurar (solo en alta): a la izquierda, verde outline */
+.form-btn-restaurar {
+  margin-right: auto;
+  background: transparent;
+  border: 1px solid #4ade80;
+  color: #4ade80;
+}
+.form-btn-restaurar:hover {
+  background: rgba(74, 222, 128, 0.12);
 }
 
 /* Botón para saltar al modal de mapeo */

@@ -1,0 +1,118 @@
+/* src/paginas/PaginaRegistradores/componentes/modales/ModalRestaurarRegistrador.css */
+/* Mini-modal que flota POR ENCIMA del modal de registrador (z-index 1100). */
+
+.restaurar-fondo-oscuro {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+}
+
+.restaurar-contenedor {
+  position: relative;
+  border-radius: 18px;
+  padding: 1.2rem 1.5rem;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.35);
+  max-width: 380px;
+  width: 90%;
+  box-sizing: border-box;
+  background: #0f172a;
+  color: #e2e8f0;
+  animation: confirmacion-aparecer 0.2s ease-out; /* reusa la animación del ModalConfirmacion */
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.restaurar-contenedor h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.restaurar-cerrar {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  background: transparent;
+  border: none;
+  color: #e2e8f0;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.7;
+}
+.restaurar-cerrar:hover {
+  opacity: 1;
+}
+
+.restaurar-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.restaurar-fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.7rem;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 0.55rem 0.7rem;
+}
+
+.restaurar-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+.restaurar-nombre {
+  font-size: 0.9rem;
+  color: #e2e8f0;
+  font-weight: 600;
+}
+.restaurar-fecha {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.restaurar-btn {
+  flex-shrink: 0;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #4ade80;
+  background: transparent;
+  color: #4ade80;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.restaurar-btn:hover:not(:disabled) {
+  background: rgba(74, 222, 128, 0.12);
+}
+.restaurar-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.restaurar-vacio {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 0.8rem 0;
+}
+
+.restaurar-error {
+  color: #fca5a5;
+  font-size: 0.85rem;
+  margin: 0.6rem 0 0;
+}

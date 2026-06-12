@@ -26,6 +26,17 @@ export function VistaRegistradores() {
   const [mapeoRegistrador, setMapeoRegistrador] = useState<Registrador | null>(null);
   const [registradorEditar, setRegistradorEditar] = useState<Registrador | null>(null);
 
+  // Color de fondo de la grilla: preferencia visual del usuario, persistida
+  // en localStorage (sobrevive al refresh, es por navegador).
+  const [colorFondo, setColorFondo] = useState(
+    () => localStorage.getItem('rw-color-fondo') ?? '#f5f7fb',
+  );
+
+  function handleCambiarColorFondo(color: string) {
+    setColorFondo(color);
+    localStorage.setItem('rw-color-fondo', color);
+  }
+
   function handleSalir() {
     logout();
   }
@@ -43,12 +54,13 @@ export function VistaRegistradores() {
   }
 
   return (
-    <div className="alim-page">
+    <div className="alim-page" style={{ backgroundColor: colorFondo }}>
       <BarraNavegacion
         esAdmin={esAdmin}
         midiendo={midiendo}
+        colorFondo={colorFondo}
         onToggleMediciones={() => setMidiendo((m) => !m)}
-        onNuevoRegistrador={handleNuevoRegistrador}
+        onCambiarColorFondo={handleCambiarColorFondo}
         onCatalogos={() => setCatalogosAbierto(true)}
         onSalir={handleSalir}
       />
