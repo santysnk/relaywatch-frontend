@@ -1,73 +1,74 @@
-# React + TypeScript + Vite
+# RelayWatch — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Cliente web para el monitoreo de **registradores eléctricos** (relés de protección y analizadores de red): un panel con tarjetas por equipo que muestran sus mediciones en vivo, y la administración completa de equipos y catálogos.
 
-Currently, two official plugins are available:
+Trabajo Práctico final del curso Full Stack — desarrollado por **Santiago** y **Vanina**.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+> ⚙️ La API está en su propio repositorio: [relaywatch-backend](https://github.com/santysnk/relaywatch-backend) — **hay que levantarla primero** para que la app funcione.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Stack
 
-## Expanding the ESLint configuration
+- **React 19 + TypeScript + Vite**
+- **React Router 7** (rutas protegidas por sesión)
+- **Axios** con interceptores: adjunta el JWT en cada request y redirige al login si la sesión expira (401)
+- Estado global con **Context API** (sesión y lista de registradores)
+- CSS propio, tema oscuro
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Funcionalidades
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **Login / Registro** con validación por campo y manejo de errores del servidor.
+- **Roles**: el `admin` administra todo; el `invitado` solo visualiza el panel.
+- **Panel de registradores**: una tarjeta por equipo con sus mediciones agrupadas en dos paneles (ej. corrientes y tensiones). Color de cabecera configurable por equipo y color de fondo de la grilla a gusto del usuario (se recuerda por navegador).
+- **Mediciones en vivo**: un botón global inicia/detiene el monitoreo — cada tarjeta consulta las últimas lecturas según su período y muestra una barra de progreso animada entre muestras.
+- **Gestión de registradores** (admin): alta/edición con test de conexión, **mapeo** de qué parámetros mide cada equipo (panel, orden y relación de transformación TT/TC, máximo 3 por panel), eliminación con confirmación y **papelera para restaurar** (las lecturas históricas nunca se pierden).
+- **Catálogos** (admin): CRUD de parámetros, relaciones de transformación y títulos de panel, en un modal con pestañas.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Puesta en marcha
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+# 0. Tener el backend corriendo (ver su README): API en http://localhost:3000
+
+# 1. Clonar e instalar
+git clone https://github.com/santysnk/relaywatch-frontend.git
+cd relaywatch-frontend
+npm install
+
+# 2. Variables de entorno
+#    copiar .env.example a .env (la URL por defecto ya apunta al backend local)
+
+# 3. Levantar en modo desarrollo
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+La app queda en `http://localhost:5173`. Para entrar la primera vez está el usuario semilla del backend: `admin@relaywatch.com` / `12345678`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Estructura del código
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+src/
+├── api/            instancia de axios + interceptores (token, 401)
+├── components/     compartidos: Modal, ModalConfirmacion, Spinner, ProtectedRoute
+├── context/        AuthContext (sesión)
+├── tipos/          interfaces TypeScript (espejo de lo que devuelve la API)
+└── paginas/
+    ├── PaginaLogin / PaginaRegistro
+    └── PaginaRegistradores/
+        ├── contexto/      lista de registradores (fetch + recarga)
+        ├── hooks/         usarLecturas (polling de mediciones)
+        └── componentes/
+            ├── layout/        VistaRegistradores (coordina todo)
+            ├── navegacion/    barra superior + selector de color
+            ├── tarjetas/      grilla y tarjeta de cada equipo
+            └── modales/       registrador, catálogos, mapeo, papelera
+```
+
+Convención de carpetas: cada componente vive junto a quien lo **renderiza** (los modales los renderiza el layout, que coordina sus estados); lo compartido por varios módulos se asciende a `src/components/`.
+
+## Detalles de implementación que valen la pena
+
+- **La etiqueta de cada box de medición** (R, S, T, R-S...) se deriva de la última palabra del nombre del parámetro en el catálogo ("Corriente R" → "R").
+- **El orden y panel de cada medición** se persisten en el backend (`config_registrador`), no en el cliente: la tarjeta se ve igual desde cualquier sesión.
+- El contenido del botón de mediciones se recrea con `key` en cada cambio de estado, lo que lo hace inmune a extensiones del navegador que reescriben el DOM (React #11538).
+- `vite.config.ts` usa `usePolling` para que el watcher funcione de forma confiable en carpetas sincronizadas (OneDrive).
