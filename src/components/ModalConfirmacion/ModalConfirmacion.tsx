@@ -10,8 +10,9 @@ interface ModalConfirmacionProps {
   textoConfirmar?: string;
   textoCancelar?: string;
   onConfirmar: () => void;
-  onCancelar: () => void;
+  onCancelar?: () => void;
   peligroso?: boolean; // true -> botón confirmar en rojo (acciones destructivas)
+  soloConfirmar?: boolean; // true -> oculta el botón Cancelar (diálogo de un solo botón, ej. "Aceptar")
 }
 
 export function ModalConfirmacion({
@@ -23,6 +24,7 @@ export function ModalConfirmacion({
   onConfirmar,
   onCancelar,
   peligroso = false,
+  soloConfirmar = false,
 }: ModalConfirmacionProps) {
   if (!abierto) return null;
 
@@ -33,13 +35,15 @@ export function ModalConfirmacion({
         <p className="confirmacion-mensaje">{mensaje}</p>
 
         <div className="confirmacion-acciones">
-          <button
-            type="button"
-            className="confirmacion-boton confirmacion-cancelar"
-            onClick={onCancelar}
-          >
-            {textoCancelar}
-          </button>
+          {!soloConfirmar && (
+            <button
+              type="button"
+              className="confirmacion-boton confirmacion-cancelar"
+              onClick={onCancelar}
+            >
+              {textoCancelar}
+            </button>
+          )}
           <button
             type="button"
             className={`confirmacion-boton ${

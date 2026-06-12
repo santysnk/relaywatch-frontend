@@ -4,6 +4,7 @@ import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '@/api/axios';
 import { Spinner } from '@/components/Spinner/Spinner';
+import { ModalConfirmacion } from '@/components/ModalConfirmacion/ModalConfirmacion';
 import logo from '@/assets/imagenes/logo-rw.png';
 import '../PaginaLogin/PaginaLogin.css'; // layout base (lo comparte con el login)
 import './PaginaRegistro.css'; // ajustes visuales propios del registro
@@ -29,6 +30,7 @@ export function PaginaRegistro() {
   const [errores, setErrores] = useState<Errores>({});
   const [enviando, setEnviando] = useState(false);
   const [alerta, setAlerta] = useState<Alerta>({ mensaje: '', tipo: 'error' });
+  const [exitoAbierto, setExitoAbierto] = useState(false);
 
   const navigate = useNavigate();
 
@@ -100,8 +102,7 @@ export function PaginaRegistro() {
         password: contrasena,
       });
 
-      mostrarAlerta('¡Cuenta creada! Redirigiendo al login…', 'exito');
-      setTimeout(() => navigate('/login'), 1400);
+      setExitoAbierto(true); // modal de éxito con botón "Iniciar sesión"
     } catch (error: any) {
       if (error?.response?.status === 409) {
         // Email duplicado → marcamos el campo email
@@ -207,6 +208,15 @@ export function PaginaRegistro() {
       {alerta.mensaje && (
         <div className={`alerta alerta-${alerta.tipo}`}>{alerta.mensaje}</div>
       )}
+
+      <ModalConfirmacion
+        abierto={exitoAbierto}
+        soloConfirmar
+        titulo="¡Cuenta creada!"
+        mensaje="Tu cuenta se creó con éxito. Ya podés iniciar sesión."
+        textoConfirmar="Iniciar sesión"
+        onConfirmar={() => navigate('/login')}
+      />
     </form>
   );
 }
