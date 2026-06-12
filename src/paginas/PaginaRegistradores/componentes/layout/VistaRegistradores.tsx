@@ -5,6 +5,7 @@ import { usarContextoRegistradores } from '../../contexto/ContextoRegistradores'
 import { BarraNavegacion } from '../navegacion/BarraNavegacion';
 import { GrillaTarjetas } from '../tarjetas/GrillaTarjetas';
 import { Modal } from '@/components/Modal/Modal';
+import { Spinner } from '@/components/Spinner/Spinner';
 import { FormularioRegistrador } from '../modales/FormularioRegistrador';
 import { ModalCatalogos } from '../modales/catalogos/ModalCatalogos';
 import { ModalMapeo } from '../modales/mapeo/ModalMapeo';
@@ -66,7 +67,12 @@ export function VistaRegistradores() {
       />
 
       <main className="alim-main">
-        {cargando && <p>Cargando registradores...</p>}
+        {cargando && (
+          <div className="alim-cargando">
+            <Spinner tamanio={30} />
+            <span>Cargando registradores…</span>
+          </div>
+        )}
         {error && <p style={{ color: 'salmon' }}>{error}</p>}
 
         {!cargando && !error && registradores.length === 0 && !esAdmin && (

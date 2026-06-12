@@ -128,6 +128,18 @@
 }
 
 
+/* Cargando la grilla: spinner centrado con texto debajo */
+.alim-cargando {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   gap: 0.7rem;
+   padding-top: 3rem;
+   color: #64748b;
+   font-size: 0.95rem;
+}
+
+
 /* =========================================================
    ESTADOS VACÍOS
    ========================================================= */

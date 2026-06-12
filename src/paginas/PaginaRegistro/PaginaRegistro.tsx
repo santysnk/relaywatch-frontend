@@ -3,6 +3,7 @@ import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '@/api/axios';
+import { Spinner } from '@/components/Spinner/Spinner';
 import logo from '@/assets/imagenes/logo-rw.png';
 import '../PaginaLogin/PaginaLogin.css'; // layout base (lo comparte con el login)
 import './PaginaRegistro.css'; // ajustes visuales propios del registro
@@ -19,6 +20,7 @@ export function PaginaRegistro() {
   const [contrasena, setContrasena] = useState('');
   const [confirmar, setConfirmar] = useState('');
   const [errores, setErrores] = useState<Errores>({});
+  const [enviando, setEnviando] = useState(false);
 
   const navigate = useNavigate();
 
@@ -71,8 +73,10 @@ export function PaginaRegistro() {
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
+    if (enviando) return;
     if (!validarTodo()) return;
 
+    setEnviando(true);
     try {
       // El backend crea el usuario. Si el email ya existe, devuelve 409.
       await api.post('/auth/register', {
@@ -91,6 +95,8 @@ export function PaginaRegistro() {
       } else {
         alert('No se pudo crear la cuenta. Intentá de nuevo.');
       }
+    } finally {
+      setEnviando(false);
     }
   }
 
@@ -169,8 +175,15 @@ export function PaginaRegistro() {
             {errores.confirmar && <p className="error-text">{errores.confirmar}</p>}
 
             <div className="acciones">
-              <button type="submit" className="boton">
-                Crear cuenta
+              <button type="submit" className="boton" disabled={enviando}>
+                {enviando ? (
+                  <span className="spinner-fila">
+                    <Spinner tamanio={16} />
+                    Creando cuenta…
+                  </span>
+                ) : (
+                  'Crear cuenta'
+                )}
               </button>
             </div>
           </div>

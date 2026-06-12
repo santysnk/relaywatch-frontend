@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { api } from '@/api/axios';
 import { ModalConfirmacion } from '@/components/ModalConfirmacion/ModalConfirmacion';
+import { Spinner } from '@/components/Spinner/Spinner';
 import type { Parametro } from '@/tipos/registrador';
 
 // El índice Modbus debe ser un entero >= 0 (solo dígitos).
@@ -195,7 +196,7 @@ export function CrudParametros() {
         {error && <p className="alim-modal-error">{error}</p>}
 
         {cargando ? (
-          <p className="cat-vacio">Cargando...</p>
+          <p className="cat-vacio"><Spinner tamanio={24} /></p>
         ) : items.length === 0 ? (
           <p className="cat-vacio">No hay parámetros todavía.</p>
         ) : (

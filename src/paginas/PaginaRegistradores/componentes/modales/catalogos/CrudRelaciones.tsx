@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { api } from '@/api/axios';
 import { ModalConfirmacion } from '@/components/ModalConfirmacion/ModalConfirmacion';
+import { Spinner } from '@/components/Spinner/Spinner';
 import type { RelacionTransformacion } from '@/tipos/registrador';
 
 // Cada lado de la relación debe ser un entero (solo dígitos). El backend
@@ -184,7 +185,7 @@ export function CrudRelaciones() {
         {error && <p className="alim-modal-error">{error}</p>}
 
         {cargando ? (
-          <p className="cat-vacio">Cargando...</p>
+          <p className="cat-vacio"><Spinner tamanio={24} /></p>
         ) : items.length === 0 ? (
           <p className="cat-vacio">No hay relaciones todavía.</p>
         ) : (

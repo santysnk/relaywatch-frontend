@@ -1,0 +1,25 @@
+/* src/components/Spinner/Spinner.css */
+
+/* Anillo giratorio: borde del color del texto con un cuarto transparente */
+.spinner {
+  display: inline-block;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spinner-girar 0.7s linear infinite;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+@keyframes spinner-girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Utilidad: ícono + texto alineados (para usar dentro de botones) */
+.spinner-fila {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}

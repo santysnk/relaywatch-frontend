@@ -3,6 +3,7 @@ import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
+import { Spinner } from '@/components/Spinner/Spinner';
 import logo from '@/assets/imagenes/logo-rw.png';
 import './PaginaLogin.css';
 
@@ -31,6 +32,7 @@ export function PaginaLogin() {
   const [contrasena, setContrasena] = useState('');
   const [mostrar, setMostrar] = useState(false);
   const [alerta, setAlerta] = useState<Alerta>({ mensaje: '', tipo: 'error' });
+  const [enviando, setEnviando] = useState(false);
 
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -43,7 +45,9 @@ export function PaginaLogin() {
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
+    if (enviando) return; // ya hay un intento en curso
 
+    setEnviando(true);
     try {
       // Toda la validación la hace el backend. Si las credenciales son
       // correctas, login() guarda el token y setea el usuario en el contexto.
@@ -57,6 +61,8 @@ export function PaginaLogin() {
           ? 'Credenciales inválidas'
           : 'No se pudo iniciar sesión. Intentá de nuevo.';
       mostrarAlerta(mensaje, 'error');
+    } finally {
+      setEnviando(false);
     }
   }
 
@@ -95,8 +101,15 @@ export function PaginaLogin() {
             </div>
 
             <div className="acciones">
-              <button type="submit" className="boton">
-                Iniciar sesión
+              <button type="submit" className="boton" disabled={enviando}>
+                {enviando ? (
+                  <span className="spinner-fila">
+                    <Spinner tamanio={16} />
+                    Ingresando…
+                  </span>
+                ) : (
+                  'Iniciar sesión'
+                )}
               </button>
 
               <Link to="/registro" className="registrarse">

@@ -1,6 +1,7 @@
 // src/paginas/PaginaRegistradores/componentes/modales/ModalRestaurarRegistrador.tsx
 import { useEffect, useState } from 'react';
 import { api } from '@/api/axios';
+import { Spinner } from '@/components/Spinner/Spinner';
 import type { Registrador } from '@/tipos/registrador';
 import './ModalRestaurarRegistrador.css';
 
@@ -58,7 +59,7 @@ export function ModalRestaurarRegistrador({
         <h2>Restaurar registrador</h2>
 
         {cargando ? (
-          <p className="restaurar-vacio">Cargando...</p>
+          <p className="restaurar-vacio"><Spinner tamanio={24} /></p>
         ) : eliminados.length === 0 ? (
           <p className="restaurar-vacio">No hay registradores eliminados.</p>
         ) : (

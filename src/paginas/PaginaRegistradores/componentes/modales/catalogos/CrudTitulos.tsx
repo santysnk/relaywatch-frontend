@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { api } from '@/api/axios';
 import { ModalConfirmacion } from '@/components/ModalConfirmacion/ModalConfirmacion';
+import { Spinner } from '@/components/Spinner/Spinner';
 import type { TituloPanel } from '@/tipos/registrador';
 
 // El título con id=1 ("Sin determinar") es el default del sistema: el backend
@@ -170,7 +171,7 @@ export function CrudTitulos() {
 
       {/* Tabla con scroll */}
       {cargando ? (
-        <p className="cat-vacio">Cargando...</p>
+        <p className="cat-vacio"><Spinner tamanio={24} /></p>
       ) : items.length === 0 ? (
         <p className="cat-vacio">No hay títulos todavía.</p>
       ) : (
