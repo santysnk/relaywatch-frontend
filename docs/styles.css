@@ -1,0 +1,518 @@
+/* ===================================================================
+   RelayWatch — Landing page
+   Paleta y estética alineadas con la app (tema oscuro + acento celeste).
+   =================================================================== */
+
+:root {
+  --bg: #0b1220;
+  --bg-alt: #0f172a;
+  --surface: #1e293b;
+  --surface-2: #28374e;
+  --borde: #334155;
+  --texto: #e2e8f0;
+  --texto-suave: #94a3b8;
+  --acento: #38bdf8; /* celeste de la app */
+  --acento-2: #4ade80; /* verde (mediciones) */
+  --radio: 14px;
+  --ancho-max: 1100px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth; /* scroll suave al clickear los anchors */
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background-color: var(--bg);
+  color: var(--texto);
+  line-height: 1.6;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Contenedor centrado reutilizable */
+.contenedor {
+  width: 100%;
+  max-width: var(--ancho-max);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.acento {
+  color: var(--acento);
+}
+
+/* ===================== HEADER ===================== */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--borde);
+}
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80px;
+}
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+.marca-logo {
+  height: 58px;
+  width: auto;
+  object-fit: contain;
+}
+.header-nav {
+  display: flex;
+  gap: 1.6rem;
+  font-size: 0.95rem;
+  color: var(--texto-suave);
+}
+.header-nav a {
+  transition: color 0.15s ease;
+}
+.header-nav a:hover {
+  color: var(--acento);
+}
+
+/* ===================== HERO ===================== */
+.hero {
+  position: relative;
+  overflow: hidden;
+  /* Glow celeste sutil arriba + fondo degradé */
+  background:
+    radial-gradient(900px 400px at 50% -10%, rgba(56, 189, 248, 0.18), transparent 70%),
+    linear-gradient(180deg, var(--bg-alt), var(--bg));
+  text-align: center;
+  padding: 5rem 0 6rem;
+}
+.hero-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.hero-logo {
+  display: block;
+  height: 420px;
+  width: auto;
+  object-fit: contain;
+  margin: 0 auto -0.4rem; /* el PNG trae espacio abajo; lo compensamos para acercar el texto */
+  filter: drop-shadow(0 6px 22px rgba(56, 189, 248, 0.4));
+}
+.hero-titulo {
+  /* el logo ya es la marca: el h1 solo envuelve la imagen (alt="RelayWatch") */
+  margin: 0;
+  line-height: 0;
+}
+.hero-tagline {
+  margin: 0.6rem 0 0;
+  font-size: clamp(1.1rem, 3vw, 1.6rem);
+  font-weight: 600;
+  color: var(--texto);
+}
+.hero-sub {
+  margin: 1.2rem 0 0;
+  max-width: 620px;
+  color: var(--texto-suave);
+  font-size: 1.05rem;
+}
+.btn-hero {
+  margin-top: 2rem;
+  display: inline-block;
+  padding: 0.8rem 1.8rem;
+  border-radius: 10px;
+  background: var(--acento);
+  color: #06283d;
+  font-weight: 700;
+  font-size: 1rem;
+  transition: transform 0.12s ease, box-shadow 0.15s ease, background 0.15s ease;
+  box-shadow: 0 10px 24px rgba(56, 189, 248, 0.25);
+}
+.btn-hero:hover {
+  transform: translateY(-2px);
+  background: #5ccbfa;
+  box-shadow: 0 14px 30px rgba(56, 189, 248, 0.35);
+}
+
+/* ===================== SHOWCASE (captura del panel) ===================== */
+.showcase {
+  padding: 4.5rem 0 5rem;
+  overflow: hidden; /* por si la inclinación se asoma, no genera scroll horizontal */
+}
+.showcase-marco {
+  max-width: 1000px;
+  margin: 0 auto;
+  border: 1px solid var(--borde);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #0f172a;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5);
+  /* Inclinación en perspectiva, igual que los teléfonos de más abajo.
+     Se endereza al pasar el mouse para leer el panel cómodo. */
+  transform: perspective(1600px) rotateY(15deg) rotateX(3deg);
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+.showcase-marco:hover {
+  transform: perspective(1600px) rotateY(0deg) rotateX(0deg);
+  box-shadow: 0 36px 80px rgba(0, 0, 0, 0.55);
+}
+/* Barra superior tipo ventana de navegador (los 3 puntitos) */
+.showcase-barra {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1rem;
+  background: #111c30;
+  border-bottom: 1px solid var(--borde);
+}
+.showcase-barra span {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #475569;
+}
+.showcase-barra span:nth-child(1) {
+  background: #ef4444;
+}
+.showcase-barra span:nth-child(2) {
+  background: #f59e0b;
+}
+.showcase-barra span:nth-child(3) {
+  background: #22c55e;
+}
+.showcase-img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ===================== SECCIONES ===================== */
+.seccion {
+  padding: 5rem 0;
+}
+.seccion-alt {
+  background-color: var(--bg-alt);
+  border-top: 1px solid var(--borde);
+  border-bottom: 1px solid var(--borde);
+}
+.seccion-titulo {
+  margin: 0;
+  text-align: center;
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  font-weight: 700;
+  /* Banda degradé + acento, la "firma" del proyecto */
+  display: inline-block;
+  width: 100%;
+}
+.seccion-titulo::after {
+  /* subrayado celeste centrado */
+  content: '';
+  display: block;
+  width: 70px;
+  height: 4px;
+  margin: 0.7rem auto 0;
+  border-radius: 2px;
+  background: linear-gradient(to right, transparent, var(--acento), transparent);
+}
+.seccion-bajada {
+  text-align: center;
+  color: var(--texto-suave);
+  margin: 0.9rem auto 2.8rem;
+  max-width: 560px;
+}
+
+/* ===================== CARDS (Características) ===================== */
+.grid-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.4rem;
+}
+.card {
+  background: var(--surface);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  padding: 1.6rem;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+.card:hover {
+  transform: translateY(-4px);
+  border-color: var(--acento);
+}
+.card-icono {
+  font-size: 2rem;
+  line-height: 1;
+  margin-bottom: 0.9rem;
+}
+.card-titulo {
+  margin: 0 0 0.5rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+.card-texto {
+  margin: 0;
+  color: var(--texto-suave);
+  font-size: 0.95rem;
+}
+
+/* ===================== FLUJO (Cómo funciona) ===================== */
+.flujo {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.paso {
+  flex: 1;
+  min-width: 220px;
+  max-width: 300px;
+  background: var(--surface-2);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  padding: 1.6rem;
+  text-align: center;
+}
+.paso-icono {
+  font-size: 2.2rem;
+  line-height: 1;
+  margin-bottom: 0.8rem;
+}
+.paso-titulo {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+.paso-texto {
+  margin: 0;
+  color: var(--texto-suave);
+  font-size: 0.92rem;
+}
+.flecha {
+  display: flex;
+  align-items: center;
+  font-size: 1.8rem;
+  color: var(--acento);
+}
+
+/* ===================== EN CUALQUIER DISPOSITIVO (teléfonos en perspectiva) ===================== */
+.responsive {
+  background-color: var(--bg-alt);
+  border-top: 1px solid var(--borde);
+  border-bottom: 1px solid var(--borde);
+}
+.telefonos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2.5rem 0 1rem;
+}
+.telefono {
+  width: 230px;
+  max-width: 58vw;
+  border-radius: 26px;
+  border: 1px solid var(--borde);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55);
+  background: #000;
+}
+/* El del centro va al frente */
+.telefono-centro {
+  position: relative;
+  z-index: 3;
+}
+/* Los laterales, girados en perspectiva y metidos detrás del central */
+.telefono-lado {
+  z-index: 2;
+  opacity: 0.95;
+}
+.telefono-izq {
+  transform: perspective(1200px) rotateY(30deg) scale(0.86);
+  transform-origin: right center;
+  margin-right: -50px;
+}
+.telefono-der {
+  transform: perspective(1200px) rotateY(-30deg) scale(0.86);
+  transform-origin: left center;
+  margin-left: -50px;
+}
+
+/* En mobile el abanico no entra: dejamos solo el del centro */
+@media (max-width: 700px) {
+  .telefono-lado {
+    display: none;
+  }
+  .telefono-centro {
+    width: 250px;
+    max-width: 80vw;
+  }
+}
+
+/* ===================== FOOTER ===================== */
+.footer {
+  background-color: #060a14;
+  border-top: 1px solid var(--borde);
+  padding: 2.5rem 0;
+}
+/* Footer: ícono (izq) · info (centro) · RELAYWATCH (der).
+   El grid 1fr/auto/1fr deja la info perfectamente centrada sin importar
+   el ancho de los costados. */
+.footer-inner {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1rem;
+}
+.footer-logo {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
+  justify-self: start;
+}
+.footer-info {
+  margin: 0;
+  color: var(--texto-suave);
+  font-size: 0.9rem;
+  text-align: center;
+}
+.footer-marca-texto {
+  justify-self: end;
+  font-weight: 700;
+  font-size: 1.35rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--texto);
+}
+
+/* ===================== ¿PARA QUIÉN ES? (filas foto + texto alternadas) ===================== */
+.proposito {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  margin-top: 0.5rem;
+}
+.proposito-fila {
+  display: flex;
+  align-items: center;
+  gap: 2.4rem;
+}
+/* las filas pares se invierten: foto a la derecha, texto a la izquierda */
+.proposito-fila:nth-child(even) {
+  flex-direction: row-reverse;
+}
+.proposito-foto {
+  flex: 1 1 50%;
+  margin: 0;
+}
+.proposito-foto img {
+  display: block;
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: var(--radio);
+  border: 1px solid var(--borde);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+}
+.proposito-texto {
+  flex: 1 1 50%;
+}
+.proposito-texto h3 {
+  margin: 0 0 0.7rem;
+  font-size: 1.35rem;
+  color: var(--acento);
+}
+.proposito-texto p {
+  margin: 0;
+  color: var(--texto-suave);
+  font-size: 1.02rem;
+}
+
+/* ===================== LO QUE VIENE (badge "Próximamente") ===================== */
+.badge-pronto {
+  display: inline-block;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--acento-2);
+  border: 1px solid var(--acento-2);
+  border-radius: 999px;
+  padding: 0.2rem 0.65rem;
+}
+/* Las cards de "lo que viene": borde punteado (todavía no están) y en flex
+   centrado para que la última fila quede balanceada (son 5 tarjetas → 3 + 2). */
+.proximamente .grid-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.proximamente .card {
+  border-style: dashed;
+  flex: 0 1 280px;
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 720px) {
+  /* las filas de "para quién" se apilan en vertical */
+  .proposito-fila,
+  .proposito-fila:nth-child(even) {
+    flex-direction: column;
+  }
+  /* en pantallas angostas: barra y logos más compactos */
+  .header-inner {
+    height: 72px;
+  }
+  .marca-logo {
+    height: 56px;
+  }
+  .hero-logo {
+    height: 280px;
+  }
+  /* footer apilado y centrado en pantallas angostas */
+  .footer-inner {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+  .footer-logo,
+  .footer-marca-texto {
+    justify-self: center;
+  }
+  .header-nav {
+    display: none; /* en mobile el header queda solo con la marca */
+  }
+  .seccion {
+    padding: 3.5rem 0;
+  }
+  /* en mobile el showcase va derecho (la inclinación de algo ancho no entra) */
+  .showcase-marco,
+  .showcase-marco:hover {
+    transform: none;
+  }
+  /* el flujo se apila en vertical y las flechas apuntan hacia abajo */
+  .flujo {
+    flex-direction: column;
+    align-items: center;
+  }
+  .paso {
+    max-width: 100%;
+    width: 100%;
+  }
+  .flecha {
+    transform: rotate(90deg);
+  }
+}

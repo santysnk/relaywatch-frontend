@@ -6,7 +6,9 @@ Trabajo Práctico final de **Desarrollo Web Full Stack** — desarrollado por **
 
 ## 🌐 App en vivo
 
-**▶ [https://relaywatch-app.vercel.app](https://relaywatch-app.vercel.app)** — usuario de prueba: `admin@relaywatch.com` / `12345678`
+**▶ App:** [https://relaywatch-app.vercel.app](https://relaywatch-app.vercel.app) — usuario de prueba: `admin@relaywatch.com` / `12345678`
+
+**🖥️ Landing:** [https://santysnk.github.io/relaywatch-frontend/](https://santysnk.github.io/relaywatch-frontend/) — página de presentación del proyecto (estática, independiente de la app; su código está en [`docs/`](docs/)).
 
 > ⏳ El backend está en el plan gratuito de Render: si estuvo inactivo, la primera carga (login) puede tardar ~50 s en "despertar". Después responde normal.
 
@@ -15,6 +17,7 @@ Trabajo Práctico final de **Desarrollo Web Full Stack** — desarrollado por **
 | Frontend (este repo) | desplegado en **Vercel** |
 | Backend / API | [relaywatch-backend](https://github.com/santysnk/relaywatch-backend) en **Render** |
 | Base de datos | MySQL en **filess.io** |
+| Landing (presentación) | carpeta `docs/`, servida por **GitHub Pages** |
 
 ---
 
