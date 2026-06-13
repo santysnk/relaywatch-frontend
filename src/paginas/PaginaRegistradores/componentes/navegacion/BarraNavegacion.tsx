@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { SelectorColorFondo } from './SelectorColorFondo';
 import './BarraNavegacion.css';
 
-// Duración del viaje del spark en el botón de mediciones.
+// Duración del viaje del spark en el botón de mediciones (desktop).
 // OJO: tiene que coincidir con la duración de la animación en el CSS.
 const DURACION_SPARK_MS = 1100;
 
@@ -17,9 +17,10 @@ interface BarraNavegacionProps {
   onSalir: () => void;
 }
 
-// Barra superior del dashboard. Es presentacional: recibe callbacks y los
-// dispara. En desktop muestra los botones inline; en mobile se colapsan en
-// un menú desplegable (hamburguesa). El desktop/mobile lo decide el CSS.
+// Barra superior del dashboard.
+// Desktop: título + mediciones (izq) y controles (der).
+// Mobile (<=820px): ☰ hamburguesa (izq) · título centrado · ▶ play (der).
+// El desktop/mobile lo decide el CSS (sin hooks de resize).
 export function BarraNavegacion({
   esAdmin,
   midiendo,
@@ -29,13 +30,12 @@ export function BarraNavegacion({
   onCatalogos,
   onSalir,
 }: BarraNavegacionProps) {
-  // Animación del spark: null = quieto, 'iniciar'/'detener' = viajando.
+  // Animación del spark (solo en el botón de desktop)
   const [animando, setAnimando] = useState<'iniciar' | 'detener' | null>(null);
   // Menú hamburguesa (solo se usa en mobile)
   const [menuAbierto, setMenuAbierto] = useState(false);
   const timerRef = useRef<number | null>(null);
 
-  // Limpieza: si el componente se desmonta a mitad de viaje, matamos el timer
   useEffect(() => {
     return () => {
       if (timerRef.current !== null) window.clearTimeout(timerRef.current);
@@ -55,6 +55,16 @@ export function BarraNavegacion({
 
   return (
     <nav className="alim-navbar">
+      {/* ☰ Hamburguesa — MOBILE (primera = izquierda) */}
+      <button
+        type="button"
+        className="alim-hamburguesa"
+        onClick={() => setMenuAbierto((o) => !o)}
+        aria-label="Menú"
+      >
+        {menuAbierto ? '✕' : '☰'}
+      </button>
+
       <div className="alim-navbar-left">
         <h1 className="alim-title">Panel de Registradores</h1>
 
@@ -103,14 +113,17 @@ export function BarraNavegacion({
         </div>
       </div>
 
-      {/* Hamburguesa — MOBILE (oculta en desktop) */}
+      {/* ▶ Play solo-ícono — MOBILE (a la derecha). Mantiene el estilo ghost del
+          botón de desktop (verde / rojo), pero togglea directo (sin spark). */}
       <button
         type="button"
-        className="alim-hamburguesa"
-        onClick={() => setMenuAbierto((o) => !o)}
-        aria-label="Menú"
+        className={`alim-btn-mediciones alim-play-mobile ${
+          midiendo ? 'alim-btn-mediciones-on' : ''
+        }`}
+        onClick={onToggleMediciones}
+        aria-label={midiendo ? 'Detener mediciones' : 'Iniciar mediciones'}
       >
-        {menuAbierto ? '✕' : '☰'}
+        {midiendo ? <span key="stop">⏹</span> : <span key="play">▶</span>}
       </button>
 
       {/* Menú desplegable — MOBILE */}

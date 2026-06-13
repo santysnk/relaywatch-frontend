@@ -265,7 +265,8 @@
    background: rgba(148, 163, 184, 0.15);
 }
 
-/* Backdrop y menú: ocultos por defecto (solo se muestran en mobile) */
+/* Play mobile, backdrop y menú: ocultos por defecto (solo se muestran en mobile) */
+.alim-play-mobile,
 .alim-menu-backdrop,
 .alim-menu-mobile {
    display: none;
@@ -330,15 +331,30 @@
    }
    .alim-title {
       font-size: 1.05rem;
-      padding: 0.25rem 0.9rem 0.25rem 0.6rem;
+      text-align: center;
+      /* efecto simétrico: acento celeste a ambos lados y degradé desde los
+         extremos (izq + der) hacia el centro */
+      background: linear-gradient(to right, #33415e 0%, transparent 50%, #33415e 100%);
+      border-left: 3px solid #38bdf8;
+      border-right: 3px solid #38bdf8;
+      padding: 0.25rem 0.9rem;
    }
 
-   /* ocultar lo de desktop, mostrar la hamburguesa */
+   /* ocultar lo de desktop, mostrar hamburguesa (izq) + play (der) */
    .alim-nav-desktop {
       display: none;
    }
    .alim-hamburguesa {
       display: inline-flex;
+   }
+   .alim-play-mobile {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.6rem;
+      height: 2.6rem;
+      padding: 0;
+      font-size: 0.95rem;
    }
 
    /* capa para cerrar tocando afuera */
