@@ -4,7 +4,17 @@ Cliente web para el monitoreo de **registradores eléctricos** (relés de protec
 
 Trabajo Práctico final del curso Full Stack — desarrollado por **Santiago Casal** y **Vanina Labrunee**.
 
-> ⚙️ La API está en su propio repositorio: [relaywatch-backend](https://github.com/santysnk/relaywatch-backend) — **hay que levantarla primero** para que la app funcione.
+## 🌐 App en vivo
+
+**▶ [https://relaywatch-app.vercel.app](https://relaywatch-app.vercel.app)** — usuario de prueba: `admin@relaywatch.com` / `12345678`
+
+> ⏳ El backend está en el plan gratuito de Render: si estuvo inactivo, la primera carga (login) puede tardar ~50 s en "despertar". Después responde normal.
+
+| | |
+|---|---|
+| Frontend (este repo) | desplegado en **Vercel** |
+| Backend / API | [relaywatch-backend](https://github.com/santysnk/relaywatch-backend) en **Render** |
+| Base de datos | MySQL en **filess.io** |
 
 ---
 
