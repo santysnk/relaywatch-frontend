@@ -18,7 +18,8 @@ interface BarraNavegacionProps {
 }
 
 // Barra superior del dashboard. Es presentacional: recibe callbacks y los
-// dispara, sin saber la lógica interna.
+// dispara. En desktop muestra los botones inline; en mobile se colapsan en
+// un menú desplegable (hamburguesa). El desktop/mobile lo decide el CSS.
 export function BarraNavegacion({
   esAdmin,
   midiendo,
@@ -29,8 +30,9 @@ export function BarraNavegacion({
   onSalir,
 }: BarraNavegacionProps) {
   // Animación del spark: null = quieto, 'iniciar'/'detener' = viajando.
-  // El toggle real de mediciones se dispara recién cuando el spark LLEGA.
   const [animando, setAnimando] = useState<'iniciar' | 'detener' | null>(null);
+  // Menú hamburguesa (solo se usa en mobile)
+  const [menuAbierto, setMenuAbierto] = useState(false);
   const timerRef = useRef<number | null>(null);
 
   // Limpieza: si el componente se desmonta a mitad de viaje, matamos el timer
@@ -49,24 +51,23 @@ export function BarraNavegacion({
     }, DURACION_SPARK_MS);
   }
 
+  const cerrarMenu = () => setMenuAbierto(false);
+
   return (
     <nav className="alim-navbar">
       <div className="alim-navbar-left">
         <h1 className="alim-title">Panel de Registradores</h1>
 
-        {/* Botón global: arranca/detiene las mediciones de TODAS las tarjetas.
-            Cuando está midiendo, muestra un puntito pulsante estilo "REC". */}
+        {/* Mediciones con spark — DESKTOP (oculto en mobile) */}
         <button
           type="button"
-          className={`alim-btn-mediciones ${midiendo ? 'alim-btn-mediciones-on' : ''} ${
-            animando ? 'alim-btn-mediciones-animando' : ''
-          }`}
+          className={`alim-btn-mediciones alim-nav-desktop ${
+            midiendo ? 'alim-btn-mediciones-on' : ''
+          } ${animando ? 'alim-btn-mediciones-animando' : ''}`}
           onClick={handleClickMediciones}
         >
           {/* El key fuerza a React a RECREAR estos nodos en cada cambio de
-              estado. Sin él, React reutiliza el nodo de texto y, si una
-              extensión del navegador lo reemplazó (traductores, etc.), el
-              texto queda congelado aunque el estado cambie (React #11538). */}
+              estado (inmune a extensiones que reescriben el DOM, React #11538). */}
           {midiendo ? (
             <span key="detener" className="alim-btn-mediciones-contenido">
               <span className="alim-dot-rec" />
@@ -78,13 +79,12 @@ export function BarraNavegacion({
               Iniciar mediciones
             </span>
           )}
-
-          {/* El spark que viaja por el botón al hacer clic */}
           {animando && <span className={`alim-spark-viaje alim-spark-${animando}`} />}
         </button>
       </div>
 
-      <div className="alim-nav-buttons">
+      {/* Acciones derecha — DESKTOP (oculto en mobile) */}
+      <div className="alim-nav-buttons alim-nav-desktop">
         <div className="alim-nav-bloque-controles">
           {esAdmin && (
             <button
@@ -96,15 +96,72 @@ export function BarraNavegacion({
               Catálogos
             </button>
           )}
-
-          {/* Selector de color de fondo de la grilla */}
           <SelectorColorFondo color={colorFondo} onCambiar={onCambiarColorFondo} />
-
           <button type="button" className="alim-btn-exit" onClick={onSalir}>
             Salir
           </button>
         </div>
       </div>
+
+      {/* Hamburguesa — MOBILE (oculta en desktop) */}
+      <button
+        type="button"
+        className="alim-hamburguesa"
+        onClick={() => setMenuAbierto((o) => !o)}
+        aria-label="Menú"
+      >
+        {menuAbierto ? '✕' : '☰'}
+      </button>
+
+      {/* Menú desplegable — MOBILE */}
+      {menuAbierto && (
+        <>
+          <div className="alim-menu-backdrop" onClick={cerrarMenu} />
+          <div className="alim-menu-mobile">
+            <button
+              type="button"
+              className={`alim-menu-item ${
+                midiendo ? 'alim-menu-item-detener' : 'alim-menu-item-iniciar'
+              }`}
+              onClick={() => {
+                onToggleMediciones();
+                cerrarMenu();
+              }}
+            >
+              {midiendo ? '⏹ Detener mediciones' : '▶ Iniciar mediciones'}
+            </button>
+
+            {esAdmin && (
+              <button
+                type="button"
+                className="alim-menu-item"
+                onClick={() => {
+                  onCatalogos();
+                  cerrarMenu();
+                }}
+              >
+                Catálogos
+              </button>
+            )}
+
+            <div className="alim-menu-item-color">
+              <span>Color de fondo</span>
+              <SelectorColorFondo color={colorFondo} onCambiar={onCambiarColorFondo} />
+            </div>
+
+            <button
+              type="button"
+              className="alim-menu-item alim-menu-salir"
+              onClick={() => {
+                onSalir();
+                cerrarMenu();
+              }}
+            >
+              Salir
+            </button>
+          </div>
+        </>
+      )}
     </nav>
   );
 }

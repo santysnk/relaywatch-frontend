@@ -16,6 +16,7 @@
    NAVBAR (DESKTOP)
    ========================================================= */
 .alim-navbar {
+   position: relative; /* ancla del menú desplegable mobile */
    display: flex;
    justify-content: space-between;
    align-items: center;
@@ -241,61 +242,128 @@
    box-shadow: none;
 }
 
-/* Boton menu: oculto por defecto (solo se usa en modo compacto) */
-.alim-navbar-menu-btn {
+/* =========================================================
+   RESPONSIVE — hamburguesa + menú desplegable (mobile)
+   ========================================================= */
+
+/* Hamburguesa: oculta en desktop, visible en mobile */
+.alim-hamburguesa {
    display: none;
-   border: none;
+   align-items: center;
+   justify-content: center;
+   width: 2.6rem;
+   height: 2.6rem;
+   border: 1px solid #475569;
+   border-radius: 10px;
    background: transparent;
    color: #e5e7eb;
-   font-size: 1.4rem;
+   font-size: 1.25rem;
+   line-height: 1;
    cursor: pointer;
 }
+.alim-hamburguesa:hover {
+   background: rgba(148, 163, 184, 0.15);
+}
 
-/* =========================================================
-   NAVBAR (MODO COMPACTO)
-   ========================================================= */
-@media (max-width: 900px) {
-   /* El contenedor principal del nav pasa a modo centrado */
+/* Backdrop y menú: ocultos por defecto (solo se muestran en mobile) */
+.alim-menu-backdrop,
+.alim-menu-mobile {
+   display: none;
+}
+
+/* Ítems del menú mobile */
+.alim-menu-item {
+   width: 100%;
+   text-align: left;
+   border: none;
+   border-radius: 8px;
+   padding: 0.6rem 0.85rem;
+   font-size: 0.9rem;
+   font-weight: 600;
+   cursor: pointer;
+   background: #334155;
+   color: #e2e8f0;
+}
+.alim-menu-item:hover {
+   background: #3e4c63;
+}
+.alim-menu-item-iniciar {
+   background: #166534;
+   color: #f0fdf4;
+}
+.alim-menu-item-iniciar:hover {
+   background: #15803d;
+}
+.alim-menu-item-detener,
+.alim-menu-salir {
+   background: #b91c1c;
+   color: #fef2f2;
+}
+.alim-menu-item-detener:hover,
+.alim-menu-salir:hover {
+   background: #991b1b;
+}
+.alim-menu-item-color {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   gap: 0.6rem;
+   padding: 0.3rem 0.5rem;
+   color: #cbd5e1;
+   font-size: 0.85rem;
+}
+
+@keyframes alim-menu-bajar {
+   from {
+      opacity: 0;
+      transform: translateY(-6px);
+   }
+   to {
+      opacity: 1;
+      transform: translateY(0);
+   }
+}
+
+@media (max-width: 820px) {
    .alim-navbar {
-      justify-content: center;
+      padding: 0.8rem 1rem;
    }
-
-   .alim-navbar-compact {
-      justify-content: center;
-      position: relative;
-   }
-
-   /* Texto centrado con el nombre del puesto */
-   .alim-navbar-compact-title {
-      font-weight: 600;
-      letter-spacing: 0.03em;
-      text-align: center;
-      width: 100%;
-   }
-
-   /* Mostramos el boton hamburguesa y lo posicionamos a la izquierda */
-   .alim-navbar-menu-btn {
-      display: block;
-      background: none;
-      border: none;
-      color: #e5e7eb;
-      font-size: 1.3rem;
-      cursor: pointer;
-   }
-
-   .alim-navbar-compact .alim-navbar-menu-btn {
-      position: absolute;
-      left: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
-   }
-
-   /* Ocultamos titulo grande y zona de botones de la derecha */
    .alim-title {
-      display: none;
+      font-size: 1.05rem;
+      padding: 0.25rem 0.9rem 0.25rem 0.6rem;
    }
 
-   .alim-nav-buttons {
+   /* ocultar lo de desktop, mostrar la hamburguesa */
+   .alim-nav-desktop {
       display: none;
+   }
+   .alim-hamburguesa {
+      display: inline-flex;
+   }
+
+   /* capa para cerrar tocando afuera */
+   .alim-menu-backdrop {
+      display: block;
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+   }
+
+   /* el menú cae debajo del navbar, alineado a la derecha */
+   .alim-menu-mobile {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      position: absolute;
+      top: calc(100% + 4px);
+      right: 0.8rem;
+      min-width: 230px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 0.8rem;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      animation: alim-menu-bajar 0.18s ease-out;
    }
 }
