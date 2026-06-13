@@ -126,28 +126,31 @@ export function BarraNavegacion({
         {midiendo ? <span key="stop">⏹</span> : <span key="play">▶</span>}
       </button>
 
-      {/* Menú desplegable — MOBILE */}
-      {menuAbierto && (
-        <>
-          <div className="alim-menu-backdrop" onClick={cerrarMenu} />
-          <div className="alim-menu-mobile">
+      {/* Drawer lateral — MOBILE (entra deslizándose desde la izquierda).
+          Se mantiene siempre en el DOM y se togglea con la clase 'abierto'
+          para que la animación de entrada/salida funcione. */}
+      <div
+        className={`alim-drawer-overlay ${menuAbierto ? 'alim-drawer-open' : ''}`}
+        onClick={cerrarMenu}
+      >
+        <div className="alim-drawer" onClick={(e) => e.stopPropagation()}>
+          <div className="alim-drawer-header">
+            <span className="alim-drawer-title">Menú</span>
             <button
               type="button"
-              className={`alim-menu-item ${
-                midiendo ? 'alim-menu-item-detener' : 'alim-menu-item-iniciar'
-              }`}
-              onClick={() => {
-                onToggleMediciones();
-                cerrarMenu();
-              }}
+              className="alim-drawer-cerrar"
+              onClick={cerrarMenu}
+              aria-label="Cerrar"
             >
-              {midiendo ? '⏹ Detener mediciones' : '▶ Iniciar mediciones'}
+              ✕
             </button>
+          </div>
 
+          <div className="alim-drawer-actions">
             {esAdmin && (
               <button
                 type="button"
-                className="alim-menu-item"
+                className="alim-drawer-item"
                 onClick={() => {
                   onCatalogos();
                   cerrarMenu();
@@ -157,14 +160,14 @@ export function BarraNavegacion({
               </button>
             )}
 
-            <div className="alim-menu-item-color">
+            <div className="alim-drawer-color">
               <span>Color de fondo</span>
               <SelectorColorFondo color={colorFondo} onCambiar={onCambiarColorFondo} />
             </div>
 
             <button
               type="button"
-              className="alim-menu-item alim-menu-salir"
+              className="alim-drawer-item alim-drawer-salir"
               onClick={() => {
                 onSalir();
                 cerrarMenu();
@@ -173,8 +176,8 @@ export function BarraNavegacion({
               Salir
             </button>
           </div>
-        </>
-      )}
+        </div>
+      </div>
     </nav>
   );
 }
