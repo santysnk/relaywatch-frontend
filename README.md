@@ -2,7 +2,7 @@
 
 Cliente web para el monitoreo de **registradores eléctricos** (relés de protección y analizadores de red): un panel con tarjetas por equipo que muestran sus mediciones en vivo, y la administración completa de equipos y catálogos.
 
-Trabajo Práctico final del curso Full Stack — desarrollado por **Santiago Casal** y **Vanina Labrunee**.
+Trabajo Práctico final de **Desarrollo Web Full Stack** — desarrollado por **Santiago Casal** y **Vanina Labrunee**.
 
 ## 🌐 App en vivo
 
