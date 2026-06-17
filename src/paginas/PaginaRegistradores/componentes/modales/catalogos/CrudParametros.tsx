@@ -112,9 +112,9 @@ export function CrudParametros() {
     }
   }
 
-  // Orden alfabético por nombre
-  const itemsOrdenados = [...items].sort((a, b) =>
-    a.nombre.localeCompare(b.nombre, 'es', { numeric: true }),
+  // Orden por índice Modbus (ascendente); nombre como desempate
+  const itemsOrdenados = [...items].sort(
+    (a, b) => a.indiceParametro - b.indiceParametro || a.nombre.localeCompare(b.nombre, 'es'),
   );
 
   const itemSeleccionado = items.find((i) => i.id === seleccionadoId);

@@ -20,9 +20,16 @@ function fase(nombre: string): string {
   return partes[partes.length - 1];
 }
 
+// Formatea el valor mostrado: lo redondea a múltiplos de 0,05 y muestra hasta
+// 2 decimales sin ceros finales (23.50 -> "23.5", 140.00 -> "140", 59.13 -> "59.15").
+function formatearValor(valor: string): string {
+  const redondeado = Math.round(Number(valor) * 20) / 20;
+  return redondeado.toFixed(2).replace(/\.?0+$/, '');
+}
+
 // Una caja de medición individual. Muestra el valor real o "--,--" si no hay.
 function CajaMedicion({ config, valor }: { config: ConfigRegistrador; valor?: string }) {
-  const display = valor != null ? Number(valor).toFixed(2) : '--,--';
+  const display = valor != null ? formatearValor(valor) : '--,--';
   return (
     <div className="alim-card-meter">
       <span className="alim-card-meter-phase">{fase(config.parametro.nombre)}</span>

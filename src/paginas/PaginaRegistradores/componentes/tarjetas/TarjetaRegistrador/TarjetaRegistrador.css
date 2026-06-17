@@ -287,9 +287,10 @@
 	position: relative;            /* necesario para dibujar el borde animado con ::before */
 	display: block;
 	font-family: "DS-Digital", "Courier New", monospace;
-	font-size: 1.3rem;
-	letter-spacing: 0.04em;
-	padding: 0.25rem 0.3rem;
+	font-size: 1.65rem;
+	line-height: 2.15rem; /* perilla de alto del box (la fuente queda centrada) */
+	letter-spacing: 0.02em;
+	padding: 0.25rem 0.2rem;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: clip;

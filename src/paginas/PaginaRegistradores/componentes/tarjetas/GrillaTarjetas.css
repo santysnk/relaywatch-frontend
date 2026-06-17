@@ -12,8 +12,8 @@
 .alim-cards-grid {
    display: flex;
    flex-wrap: wrap;
-   row-gap: 1.8rem;
-   column-gap: 2.4rem;
+   row-gap: 4.4rem;
+   column-gap: 4.2rem;
    justify-content: left; /* filas alineadas a la izquierda */
    padding-left: 1.2rem;
 }
@@ -22,7 +22,8 @@
 @media (max-width: 982px) {
    .alim-cards-grid {
       justify-content: center;
-      column-gap: 1.4rem;
+      row-gap: 2.6rem; /* mobile clavado: no hereda el aumento de separación del desktop */
+      column-gap: 2rem;
       padding-left: 0;
    }
 }
