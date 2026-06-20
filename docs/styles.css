@@ -90,6 +90,27 @@ a {
   color: var(--acento);
 }
 
+/* Botón "Ingresar" → login de la app (se abre en una pestaña aparte).
+   Va como elemento propio del header (no dentro del menú) para que también
+   se vea en mobile, donde el menú de links se oculta. */
+.btn-ingresar {
+  flex-shrink: 0;
+  padding: 0.5rem 1.2rem;
+  border-radius: 9px;
+  background: var(--acento);
+  color: #06283d;
+  font-weight: 700;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  transition: transform 0.12s ease, background 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 6px 16px rgba(56, 189, 248, 0.25);
+}
+.btn-ingresar:hover {
+  transform: translateY(-1px);
+  background: #5ccbfa;
+  box-shadow: 0 8px 20px rgba(56, 189, 248, 0.35);
+}
+
 /* ===================== HERO ===================== */
 .hero {
   position: relative;
